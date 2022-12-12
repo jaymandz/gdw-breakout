@@ -1,0 +1,13 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+pygame = {version = "*", sys_platform = "!= 'win32'"}
+pygame_win32 = {path = "./pygame-2.1.2-cp311-cp311-win_amd64.whl", sys_platform = "== 'win32'"}
+
+[dev-packages]
+
+[requires]
+python_version = "3.11"
