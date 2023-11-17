@@ -24,7 +24,7 @@ Enjoy!
 
 Last commits were on December 12, 2022. Whew!
 
-Anyway, I tried setting this repo up in a Pearl Linux 13 system (which is based on Debian 12). I had to install the libraries listed below first. This sould serve as a guide for Linux users who want to run this game on what to install first:
+Anyway, I tried setting this repo up in a Pearl Linux 13 system (which is based on Debian 12). I had to install the libraries listed below first. This should serve as a guide for Linux users who want to run this game on what to install first:
 
 - `libfreetype6-dev`
 - `libportmidi-dev`
