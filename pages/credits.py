@@ -1,4 +1,5 @@
 import pygame
+from pygame import locals
 
 import colors
 import text_utils as tu
@@ -8,6 +9,9 @@ class CreditsPage(object):
         self.surface = pygame.surface.Surface(screen_size)
 
     def handle_event(self, event):
+        pressed_keys = pygame.key.get_pressed()
+        if pressed_keys[locals.K_ESCAPE]: return 'main_menu'
+
         return 'credits'
 
     def draw(self):
@@ -47,4 +51,10 @@ class CreditsPage(object):
         self.surface.blit(
             tu.regular_text(colors.black, 'Fonts'),
             (40, 40 + tu.line_size() * 7),
+        )
+
+        # Footer
+        self.surface.blit(
+            tu.regular_text(colors.gray, '<Esc>: Back'),
+            (20, 480 - 20 - tu.line_size()),
         )

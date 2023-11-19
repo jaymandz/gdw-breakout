@@ -5,7 +5,7 @@ import pygame
 from pygame import locals
 
 from pages import credits as credits_module
-from pages import game as game_module
+from pages import new_game as new_game_module
 from pages import main_menu as main_menu_module
 
 pygame.init()
@@ -16,7 +16,7 @@ screen = pygame.display.set_mode(SCREEN_SIZE, 0, 32)
 
 pages = {
     'credits': credits_module.CreditsPage(SCREEN_SIZE),
-    'game': game_module.GamePage(SCREEN_SIZE),
+    'new_game': new_game_module.NewGamePage(SCREEN_SIZE),
     'main_menu': main_menu_module.MainMenuPage(SCREEN_SIZE),
 }
 

@@ -3,7 +3,7 @@ from pygame import locals
 
 import colors
 
-class GamePage(object):
+class NewGamePage(object):
     PADDLE_SIZE = (80, 10)
     BALL_RADIUS = 10
 
@@ -20,7 +20,10 @@ class GamePage(object):
         )
 
     def handle_event(self, event):
-        return 'game'
+        pressed_keys = pygame.key.get_pressed()
+        if pressed_keys[locals.K_ESCAPE]: return 'main_menu'
+
+        return 'new_game'
 
     def draw(self):
         self.surface.fill(colors.beige)
