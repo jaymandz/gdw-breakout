@@ -1,13 +1,14 @@
 import pygame
 from pygame import locals
 
+import colors
+
 class GamePage(object):
     PADDLE_SIZE = (80, 10)
     BALL_RADIUS = 10
 
-    def __init__(self, screen_size, font):
+    def __init__(self, screen_size):
         self.surface = pygame.surface.Surface(screen_size)
-        self.font = font
 
         self.paddle_position = (
             screen_size[0] / 2 - self.PADDLE_SIZE[0] / 2,
@@ -22,16 +23,16 @@ class GamePage(object):
         return 'game'
 
     def draw(self):
-        self.surface.fill((245, 245, 220))
+        self.surface.fill(colors.beige)
 
         pygame.draw.rect(
             self.surface,
-            (153, 153, 153),
+            colors.gray,
             locals.Rect(self.paddle_position, self.PADDLE_SIZE),
         )
         pygame.draw.circle(
             self.surface,
-            (255, 0, 0),
+            colors.red,
             self.ball_position,
             self.BALL_RADIUS,
         )
