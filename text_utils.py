@@ -17,6 +17,9 @@ fonts = {
     ),
 }
 
+def line_size(spacing=1.0):
+    return fonts['regular'].get_linesize() * spacing
+
 def regular_text(color, text):
     return fonts['regular'].render(text, True, color)
 

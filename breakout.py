@@ -20,7 +20,7 @@ pages = {
     'main_menu': main_menu_module.MainMenuPage(SCREEN_SIZE),
 }
 
-curr_page_key = 'game'
+curr_page_key = 'main_menu'
 
 pygame.display.set_caption('Breakout, by jaymandz')
 

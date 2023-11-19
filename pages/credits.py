@@ -23,28 +23,28 @@ class CreditsPage(object):
         )
         self.surface.blit(
             tu.italic_text(colors.black, 'github.com/jaymandz'),
-            (360, 40 + tu.fonts['italic'].get_linesize()),
+            (360, 40 + tu.line_size()),
         )
 
         self.surface.blit(
             tu.regular_text(colors.black, 'Music'),
-            (40, 40 + tu.fonts['regular'].get_linesize() * 3),
+            (40, 40 + tu.line_size() * 3),
         )
         self.surface.blit(
             tu.italic_text(colors.black, 'TBD'),
-            (360, 40 + tu.fonts['italic'].get_linesize() * 3),
+            (360, 40 + tu.line_size() * 3),
         )
 
         self.surface.blit(
             tu.regular_text(colors.black, 'Sound effects'),
-            (40, 40 + tu.fonts['regular'].get_linesize() * 5),
+            (40, 40 + tu.line_size() * 5),
         )
         self.surface.blit(
             tu.italic_text(colors.black, 'TBD'),
-            (360, 40 + tu.fonts['italic'].get_linesize() * 5),
+            (360, 40 + tu.line_size() * 5),
         )
 
         self.surface.blit(
             tu.regular_text(colors.black, 'Fonts'),
-            (40, 40 + tu.fonts['regular'].get_linesize() * 7),
+            (40, 40 + tu.line_size() * 7),
         )
