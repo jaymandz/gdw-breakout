@@ -54,7 +54,9 @@ class MainMenuPage(object):
         )
 
         # Footer
+        footer_text = '\u2191\u2193: Highlight, <Enter>: Select, '+ \
+          '<Esc>: Exit'
         self.surface.blit(
-            tu.regular_text(colors.gray, '<Esc>: Exit'),
+            tu.regular_text(colors.gray, footer_text),
             (20, 480 - 20 - tu.line_size()),
         )

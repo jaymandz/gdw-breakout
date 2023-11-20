@@ -25,3 +25,6 @@ def regular_text(color, text):
 
 def italic_text(color, text):
     return fonts['italic'].render(text, True, color)
+
+def header_height(): return line_size() + 40
+def footer_height(): return line_size() + 40
