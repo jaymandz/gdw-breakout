@@ -13,6 +13,7 @@ pygame.init()
 SCREEN_SIZE = (640, 480)
 
 screen = pygame.display.set_mode(SCREEN_SIZE, 0, 32)
+clock = pygame.time.Clock()
 
 pages = {
     'credits': credits_module.CreditsPage(SCREEN_SIZE),
@@ -26,7 +27,10 @@ pygame.display.set_caption('Breakout, by jaymandz')
 
 while True:
     for event in pygame.event.get():
-        curr_page_key = pages[curr_page_key].handle_event(event)
+        new_page_key = pages[curr_page_key].handle_event(event)
+        if new_page_key != curr_page_key:
+            pages[new_page_key].load()
+            curr_page_key = new_page_key
         if event.type == locals.QUIT: sys.exit()
 
     pages[curr_page_key].draw()

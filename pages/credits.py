@@ -8,6 +8,9 @@ class CreditsPage(object):
     def __init__(self, screen_size):
         self.surface = pygame.surface.Surface(screen_size)
 
+    def load(self):
+        pass
+
     def handle_event(self, event):
         pressed_keys = pygame.key.get_pressed()
         if pressed_keys[locals.K_ESCAPE]: return 'main_menu'
