@@ -8,9 +8,55 @@ class NewGamePage(object):
     PADDLE_SIZE = (80, 10)
     BALL_RADIUS = 10
 
+    PADDLE_SPEED_FACTOR = 0.5
+    BALL_SPEED_FACTOR = 0.3
+
     def __init__(self, screen_size):
         self.screen_size = screen_size
         self.surface = pygame.surface.Surface(screen_size)
+        self.clock = pygame.time.Clock()
+
+    def _ball_in_play_position(self, ball_x, ball_y):
+        if ball_x < self.BALL_RADIUS:
+            ball_x = self.BALL_RADIUS
+            self.ball_velocity_x = self.BALL_SPEED_FACTOR
+        elif ball_x > self.screen_size[0] - self.BALL_RADIUS:
+            ball_x = self.screen_size[0] - self.BALL_RADIUS
+            self.ball_velocity_x = -self.BALL_SPEED_FACTOR
+
+        if ball_y < tu.header_height() + self.BALL_RADIUS:
+            ball_y = tu.header_height() + self.BALL_RADIUS
+            self.ball_velocity_y = self.BALL_SPEED_FACTOR
+        elif ball_y > self.screen_size[1] - tu.footer_height() - \
+          self.BALL_RADIUS - self.PADDLE_SIZE[1] and \
+          ball_x >= self.paddle_position[0] and \
+          ball_x <= self.paddle_position[0] + self.PADDLE_SIZE[0]:
+            ball_y = self.screen_size[1] - tu.footer_height() - \
+              self.BALL_RADIUS - self.PADDLE_SIZE[1]
+            self.ball_velocity_y = -self.BALL_SPEED_FACTOR
+        elif ball_y > self.screen_size[1] - tu.footer_height():
+            self.is_ball_in_play = False
+            ball_x = self.paddle_position[0] + self.PADDLE_SIZE[0] / 2
+            ball_y = self.screen_size[1] - tu.footer_height() - \
+              self.PADDLE_SIZE[1] - self.BALL_RADIUS
+            self.ball_velocity_x = self.paddle_velocity
+            self.ball_velocity_y = 0
+
+        return ball_x, ball_y
+
+    def _get_ball_position(self, time_elapsed_ms):
+        ball_x = self.ball_position[0] + self.ball_velocity_x * \
+          time_elapsed_ms
+        ball_y = self.ball_position[1] + self.ball_velocity_y * \
+          time_elapsed_ms
+
+        ball_x, ball_y = self._ball_in_play_position(ball_x, ball_y)
+        if not self.is_ball_in_play:
+            half_paddle = self.PADDLE_SIZE[0] / 2
+            if ball_x < half_paddle: ball_x = half_paddle
+            elif ball_x > 640 - half_paddle: ball_x = 640 - half_paddle
+
+        return ball_x, ball_y
 
     def load(self):
         self.paddle_position = (
@@ -24,31 +70,44 @@ class NewGamePage(object):
         )
 
         self.paddle_velocity = 0
+        self.ball_velocity_x = 0
+        self.ball_velocity_y = 0
+        self.is_ball_in_play = False
 
     def handle_event(self, event):
         if event.type == locals.KEYUP:
             self.paddle_velocity = 0
+            if not self.is_ball_in_play: self.ball_velocity_x = 0
 
         pressed_keys = pygame.key.get_pressed()
         if pressed_keys[locals.K_ESCAPE]:
             return 'main_menu' # Should go to the Pause page
-        elif pressed_keys[locals.K_SPACE]:
-            pass
+        elif pressed_keys[locals.K_SPACE] and not self.is_ball_in_play:
+            self.is_ball_in_play = True
+            self.ball_velocity_x = self.BALL_SPEED_FACTOR
+            self.ball_velocity_y = -self.BALL_SPEED_FACTOR
         elif pressed_keys[locals.K_LEFT]:
-            self.paddle_velocity = -1
+            self.paddle_velocity = -self.PADDLE_SPEED_FACTOR
+            if not self.is_ball_in_play:
+              self.ball_velocity_x = -self.PADDLE_SPEED_FACTOR
         elif pressed_keys[locals.K_RIGHT]:
-            self.paddle_velocity = 1
+            self.paddle_velocity = self.PADDLE_SPEED_FACTOR
+            if not self.is_ball_in_play:
+              self.ball_velocity_x = self.PADDLE_SPEED_FACTOR
 
         return 'new_game'
 
     def draw(self):
-        x = self.paddle_position[0] + self.paddle_velocity
-        if x < 0:
-            x = 0
-        elif x > 640 - self.PADDLE_SIZE[0]:
-            x = 640 - self.PADDLE_SIZE[0]
+        time_elapsed_ms = self.clock.tick()
 
-        self.paddle_position = (x, self.paddle_position[1])
+        paddle_x = self.paddle_position[0] + self.paddle_velocity * \
+          time_elapsed_ms
+        if paddle_x < 0: paddle_x = 0
+        elif paddle_x > 640 - self.PADDLE_SIZE[0]:
+            paddle_x = 640 - self.PADDLE_SIZE[0]
+
+        self.paddle_position = (paddle_x, self.paddle_position[1])
+        self.ball_position = self._get_ball_position(time_elapsed_ms)
 
         self.surface.fill(colors.beige)
 

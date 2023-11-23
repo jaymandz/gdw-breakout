@@ -13,7 +13,6 @@ pygame.init()
 SCREEN_SIZE = (640, 480)
 
 screen = pygame.display.set_mode(SCREEN_SIZE, 0, 32)
-clock = pygame.time.Clock()
 
 pages = {
     'credits': credits_module.CreditsPage(SCREEN_SIZE),
