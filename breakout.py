@@ -7,6 +7,7 @@ from pygame import locals
 from pages import credits as credits_module
 from pages import new_game as new_game_module
 from pages import main_menu as main_menu_module
+from pages import pause as pause_module
 
 pygame.init()
 
@@ -18,6 +19,7 @@ pages = {
     'credits': credits_module.CreditsPage(SCREEN_SIZE),
     'new_game': new_game_module.NewGamePage(SCREEN_SIZE),
     'main_menu': main_menu_module.MainMenuPage(SCREEN_SIZE),
+    'pause': pause_module.PausePage(SCREEN_SIZE),
 }
 
 curr_page_key = 'main_menu'

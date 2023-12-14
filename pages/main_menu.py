@@ -17,7 +17,7 @@ class MainMenuPage(object):
         else: return colors.black
 
     def load(self):
-        pass
+        self.curr_item_index = 0
 
     def handle_event(self, event):
         ni = self.num_items

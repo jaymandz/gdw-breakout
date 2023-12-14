@@ -6,6 +6,7 @@ import text_utils as tu
 
 class NewGamePage(object):
     PADDLE_SIZE = (80, 10)
+    BRICK_SIZE = (40, 16)
     BALL_RADIUS = 10
 
     PADDLE_SPEED_FACTOR = 0.5
@@ -35,6 +36,8 @@ class NewGamePage(object):
               self.BALL_RADIUS - self.PADDLE_SIZE[1]
             self.ball_velocity_y = -self.BALL_SPEED_FACTOR
         elif ball_y > self.screen_size[1] - tu.footer_height():
+            self.num_lives -= 1
+
             self.is_ball_in_play = False
             ball_x = self.paddle_position[0] + self.PADDLE_SIZE[0] / 2
             ball_y = self.screen_size[1] - tu.footer_height() - \
@@ -74,6 +77,9 @@ class NewGamePage(object):
         self.ball_velocity_y = 0
         self.is_ball_in_play = False
 
+        self.num_lives = 3
+        self.score = 0
+
     def handle_event(self, event):
         if event.type == locals.KEYUP:
             self.paddle_velocity = 0
@@ -81,7 +87,7 @@ class NewGamePage(object):
 
         pressed_keys = pygame.key.get_pressed()
         if pressed_keys[locals.K_ESCAPE]:
-            return 'main_menu' # Should go to the Pause page
+            return 'pause'
         elif pressed_keys[locals.K_SPACE] and not self.is_ball_in_play:
             self.is_ball_in_play = True
             self.ball_velocity_x = self.BALL_SPEED_FACTOR
@@ -110,6 +116,65 @@ class NewGamePage(object):
         self.ball_position = self._get_ball_position(time_elapsed_ms)
 
         self.surface.fill(colors.beige)
+
+        # Header
+        self.surface.blit(
+            tu.regular_text(colors.gray, str(self.num_lives)+' lives'),
+            (20, 20),
+        )
+
+        score_surface = tu.regular_text(colors.gray, str(self.score))
+        self.surface.blit(
+            score_surface,
+            (self.screen_size[0]/2 - score_surface.get_size()[0]/2, 20),
+        )
+
+        # Draw bricks
+        pygame.draw.rect(
+            self.surface,
+            colors.red,
+            locals.Rect((0, tu.header_height() + 80), self.BRICK_SIZE),
+        )
+        pygame.draw.rect(
+            self.surface,
+            colors.red,
+            locals.Rect((44, tu.header_height() + 80), (40, 16)),
+        )
+        pygame.draw.rect(
+            self.surface,
+            colors.red,
+            locals.Rect((0, tu.header_height() + 100), (40, 16)),
+        )
+        pygame.draw.rect(
+            self.surface,
+            colors.orange,
+            locals.Rect((0, tu.header_height() + 120), (40, 16)),
+        )
+        pygame.draw.rect(
+            self.surface,
+            colors.orange,
+            locals.Rect((0, tu.header_height() + 140), (40, 16)),
+        )
+        pygame.draw.rect(
+            self.surface,
+            colors.green,
+            locals.Rect((0, tu.header_height() + 160), (40, 16)),
+        )
+        pygame.draw.rect(
+            self.surface,
+            colors.green,
+            locals.Rect((0, tu.header_height() + 180), (40, 16)),
+        )
+        pygame.draw.rect(
+            self.surface,
+            colors.yellow,
+            locals.Rect((0, tu.header_height() + 200), (40, 16)),
+        )
+        pygame.draw.rect(
+            self.surface,
+            colors.yellow,
+            locals.Rect((0, tu.header_height() + 220), (40, 16)),
+        )
 
         pygame.draw.rect(
             self.surface,
