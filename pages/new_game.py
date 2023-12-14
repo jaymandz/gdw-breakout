@@ -61,6 +61,19 @@ class NewGamePage(object):
 
         return ball_x, ball_y
 
+    def _initialize_bricks(self):
+        bricks = []
+        for b in range(0, self.screen_size[0], 46):
+            bricks.append((colors.red, (b, tu.header_height() + 80)))
+            bricks.append((colors.red, (b, tu.header_height() + 100)))
+            bricks.append((colors.orange, (b, tu.header_height() + 120)))
+            bricks.append((colors.orange, (b, tu.header_height() + 140)))
+            bricks.append((colors.green, (b, tu.header_height() + 160)))
+            bricks.append((colors.green, (b, tu.header_height() + 180)))
+            bricks.append((colors.yellow, (b, tu.header_height() + 200)))
+            bricks.append((colors.yellow, (b, tu.header_height() + 220)))
+        return bricks
+
     def load(self):
         self.paddle_position = (
             self.screen_size[0] / 2 - self.PADDLE_SIZE[0] / 2,
@@ -71,6 +84,8 @@ class NewGamePage(object):
             self.screen_size[1] - self.PADDLE_SIZE[1] - \
               self.BALL_RADIUS - tu.footer_height(),
         )
+
+        self.bricks = self._initialize_bricks()
 
         self.paddle_velocity = 0
         self.ball_velocity_x = 0
@@ -130,57 +145,20 @@ class NewGamePage(object):
         )
 
         # Draw bricks
-        pygame.draw.rect(
+        for brick in self.bricks: pygame.draw.rect(
             self.surface,
-            colors.red,
-            locals.Rect((0, tu.header_height() + 80), self.BRICK_SIZE),
-        )
-        pygame.draw.rect(
-            self.surface,
-            colors.red,
-            locals.Rect((44, tu.header_height() + 80), (40, 16)),
-        )
-        pygame.draw.rect(
-            self.surface,
-            colors.red,
-            locals.Rect((0, tu.header_height() + 100), (40, 16)),
-        )
-        pygame.draw.rect(
-            self.surface,
-            colors.orange,
-            locals.Rect((0, tu.header_height() + 120), (40, 16)),
-        )
-        pygame.draw.rect(
-            self.surface,
-            colors.orange,
-            locals.Rect((0, tu.header_height() + 140), (40, 16)),
-        )
-        pygame.draw.rect(
-            self.surface,
-            colors.green,
-            locals.Rect((0, tu.header_height() + 160), (40, 16)),
-        )
-        pygame.draw.rect(
-            self.surface,
-            colors.green,
-            locals.Rect((0, tu.header_height() + 180), (40, 16)),
-        )
-        pygame.draw.rect(
-            self.surface,
-            colors.yellow,
-            locals.Rect((0, tu.header_height() + 200), (40, 16)),
-        )
-        pygame.draw.rect(
-            self.surface,
-            colors.yellow,
-            locals.Rect((0, tu.header_height() + 220), (40, 16)),
+            brick[0],
+            locals.Rect(brick[1], self.BRICK_SIZE),
         )
 
+        # Draw paddle
         pygame.draw.rect(
             self.surface,
             colors.black,
             locals.Rect(self.paddle_position, self.PADDLE_SIZE),
         )
+
+        # Draw ball
         pygame.draw.circle(
             self.surface,
             colors.dark_red,
