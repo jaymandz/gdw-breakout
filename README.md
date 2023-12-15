@@ -17,3 +17,7 @@ $ poetry run python breakout.py
 ```
 
 Enjoy!
+
+## Song credits
+
+- Andrey Avkhimovich - &ldquo;Like A Cake&rdquo; [(listen on Jamendo)](https://www.jamendo.com/track/1199570/like-a-cake)

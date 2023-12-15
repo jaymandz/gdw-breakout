@@ -38,22 +38,26 @@ class CreditsPage(object):
             (40, 40 + tu.line_size() * 3),
         )
         self.surface.blit(
-            tu.italic_text(colors.black, 'TBD'),
+            tu.italic_text(colors.black, 'Like A Cake'),
             (360, 40 + tu.line_size() * 3),
+        )
+        self.surface.blit(
+            tu.regular_text(colors.black, 'by Andrey Avkhimovich'),
+            (360, 40 + tu.line_size() * 4),
         )
 
         self.surface.blit(
             tu.regular_text(colors.black, 'Sound effects'),
-            (40, 40 + tu.line_size() * 5),
+            (40, 40 + tu.line_size() * 6),
         )
         self.surface.blit(
             tu.italic_text(colors.black, 'TBD'),
-            (360, 40 + tu.line_size() * 5),
+            (360, 40 + tu.line_size() * 6),
         )
 
         self.surface.blit(
             tu.regular_text(colors.black, 'Fonts'),
-            (40, 40 + tu.line_size() * 7),
+            (40, 40 + tu.line_size() * 8),
         )
 
         # Footer

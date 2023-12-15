@@ -1,4 +1,5 @@
-import sys
+import os, sys
+
 sys.path.append('.')
 
 import pygame
@@ -26,6 +27,11 @@ curr_page_key = 'main_menu'
 
 pygame.display.set_caption('Breakout, by jaymandz')
 
+pygame.mixer.music.set_endevent(locals.USEREVENT + 1)
+
+pygame.mixer.music.load('audio/Andrey Avkhimovich - Like A Cake.mp3')
+pygame.mixer.music.play()
+
 while True:
     for event in pygame.event.get():
         new_page_key = pages[curr_page_key].handle_event(event)
@@ -33,6 +39,7 @@ while True:
             pages[new_page_key].load()
             curr_page_key = new_page_key
         if event.type == locals.QUIT: sys.exit()
+        elif event.type == locals.USEREVENT + 1: pygame.mixer.music.play()
 
     pages[curr_page_key].draw()
     screen.blit(pages[curr_page_key].surface, (0, 0))
