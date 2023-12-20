@@ -18,6 +18,7 @@ $ poetry run python breakout.py
 
 Enjoy!
 
-## Song credits
+## Audio credits
 
-- Andrey Avkhimovich - &ldquo;Like A Cake&rdquo; [(listen on Jamendo)](https://www.jamendo.com/track/1199570/like-a-cake)
+- Background song is &ldquo;Like A Cake&rdquo; by Andrey Avkhimovich. [Listen on Jamendo](https://www.jamendo.com/track/1199570/like-a-cake)
+- Ball bounce on paddle was extracted from [this sound](https://freesound.org/people/DanielRousseau/sounds/366780/) from Freesound user `DanielRousseau`.

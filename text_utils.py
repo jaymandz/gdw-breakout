@@ -23,6 +23,9 @@ def line_size(spacing=1.0):
 def regular_text(color, text):
     return fonts['regular'].render(text, True, color)
 
+def bold_text(color, text):
+    return fonts['bold'].render(text, True, color)
+
 def italic_text(color, text):
     return fonts['italic'].render(text, True, color)
 

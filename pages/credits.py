@@ -21,43 +21,47 @@ class CreditsPage(object):
         self.surface.fill(colors.beige)
 
         self.surface.blit(
-            tu.regular_text(colors.black, 'Code'),
+            tu.bold_text(colors.black, 'Code'),
             (40, 40),
         )
         self.surface.blit(
             tu.regular_text(colors.black, 'Jay Mandane'),
-            (360, 40),
+            (50, 40 + tu.line_size()),
         )
         self.surface.blit(
-            tu.italic_text(colors.black, 'github.com/jaymandz'),
-            (360, 40 + tu.line_size()),
-        )
-
-        self.surface.blit(
-            tu.regular_text(colors.black, 'Music'),
-            (40, 40 + tu.line_size() * 3),
-        )
-        self.surface.blit(
-            tu.italic_text(colors.black, 'Like A Cake'),
-            (360, 40 + tu.line_size() * 3),
-        )
-        self.surface.blit(
-            tu.regular_text(colors.black, 'by Andrey Avkhimovich'),
-            (360, 40 + tu.line_size() * 4),
+            tu.regular_text(colors.black, 'https://github.com/jaymandz'),
+            (50, 40 + tu.line_size() * 2),
         )
 
         self.surface.blit(
-            tu.regular_text(colors.black, 'Sound effects'),
-            (40, 40 + tu.line_size() * 6),
+            tu.bold_text(colors.black, 'Music'),
+            (40, 40 + tu.line_size() * 4),
         )
         self.surface.blit(
-            tu.italic_text(colors.black, 'TBD'),
-            (360, 40 + tu.line_size() * 6),
+            tu.italic_text(colors.black, 'Andrey Avkhimovich - Like A Cake'),
+            (50, 40 + tu.line_size() * 5),
+        )
+        self.surface.blit(
+            tu.regular_text(colors.black, 'https://www.jamendo.com/track/1199570/like-a-cake'),
+            (50, 40 + tu.line_size() * 6),
         )
 
         self.surface.blit(
-            tu.regular_text(colors.black, 'Fonts'),
+            tu.bold_text(colors.black, 'Sound effects'),
             (40, 40 + tu.line_size() * 8),
+        )
+        self.surface.blit(
+            tu.italic_text(colors.black, 'Ball bounce on paddle'),
+            (50, 40 + tu.line_size() * 9),
+        )
+        self.surface.blit(
+            tu.regular_text(colors.black, 'https://freesound.org/people/DanielRousseau/sounds/366780'),
+            (50, 40 + tu.line_size() * 10),
+        )
+
+        self.surface.blit(
+            tu.bold_text(colors.black, 'Fonts'),
+            (40, 40 + tu.line_size() * 12),
         )
 
         # Footer
