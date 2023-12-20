@@ -1,3 +1,5 @@
+import math
+
 import pygame
 from pygame import locals
 
@@ -20,6 +22,9 @@ class NewGamePage(object):
         self.brick_smash_sound = pygame.mixer.Sound(
             'audio/brick-smash.ogg'
         )
+        self.ball_on_paddle_sound = pygame.mixer.Sound(
+            'audio/ball-on-paddle.ogg'
+        )
 
     def _ball_in_play_position(self, ball_x, ball_y):
         if ball_x < self.BALL_RADIUS:
@@ -36,6 +41,7 @@ class NewGamePage(object):
           self.BALL_RADIUS - self.PADDLE_SIZE[1] and \
           ball_x >= self.paddle_position[0] and \
           ball_x <= self.paddle_position[0] + self.PADDLE_SIZE[0]:
+            self.ball_on_paddle_sound.play()
             ball_y = self.screen_size[1] - tu.footer_height() - \
               self.BALL_RADIUS - self.PADDLE_SIZE[1]
             self.ball_velocity_y = -self.BALL_SPEED_FACTOR
@@ -60,29 +66,7 @@ class NewGamePage(object):
         if not self.is_ball_in_play: return brick, ball_x, ball_y
         if not brick[2]: return brick, ball_x, ball_y
 
-        #if ball_y > brick[1][1] - self.BALL_RADIUS:
-        #    self.brick_smash_sound.play()
-        # Hit from the bottom
-        if ball_x >= brick[1][0] and \
-          ball_x <= brick[1][0] + self.BRICK_SIZE[0] and \
-          ball_y < brick[1][1] + self.BRICK_SIZE[1] + self.BALL_RADIUS:
-            self.brick_smash_sound.play()
-            brick = (brick[0], brick[1], False)
-            self.ball_velocity_y = self.BALL_SPEED_FACTOR
-        # Hit from the left
-        elif ball_y >= brick[1][1] and \
-          ball_y <= brick[1][1] + self.BRICK_SIZE[1] and \
-          ball_x + self.BALL_RADIUS >= brick[1][0]:
-            self.brick_smash_sound.play()
-            brick = (brick[0], brick[1], False)
-            self.ball_velocity_x = -self.BALL_SPEED_FACTOR
-        # Hit from the right
-        #elif ball_y >= brick[1][1] and \
-        #  ball_y <= brick[1][1] + self.BRICK_SIZE[1] and \
-        #  ball_x - self.BALL_RADIUS <= brick[1][0] + self.BRICK_SIZE[0]:
-        #    self.brick_smash_sound.play()
-        #    brick = (brick[0], brick[1], False)
-        #    self.ball_velocity_x = self.BALL_SPEED_FACTOR
+        # Find a damn good bouncing/collision algorithm first!
 
         return brick, ball_x, ball_y
 
@@ -102,7 +86,7 @@ class NewGamePage(object):
 
     def _initialize_bricks(self):
         bricks = []
-        for b in range(0, 240, 46):
+        for b in range(0, self.screen_size[0], 46):
             bricks.append((colors.red, (b, tu.header_height() + 80),
               True))
             bricks.append((colors.red, (b, tu.header_height() + 100),
