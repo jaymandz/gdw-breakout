@@ -28,16 +28,22 @@ class NewGamePage(object):
         self.ball_launch_sound = pygame.mixer.Sound(
             'audio/ball-launch.ogg'
         )
+        self.ball_on_wall_sound = pygame.mixer.Sound(
+            'audio/ball-on-wall.ogg'
+        )
 
     def _ball_in_play_position(self, ball_x, ball_y):
         if ball_x < self.BALL_RADIUS:
+            self.ball_on_wall_sound.play()
             ball_x = self.BALL_RADIUS
             self.ball_velocity_x = self.BALL_SPEED_FACTOR
         elif ball_x > self.screen_size[0] - self.BALL_RADIUS:
+            self.ball_on_wall_sound.play()
             ball_x = self.screen_size[0] - self.BALL_RADIUS
             self.ball_velocity_x = -self.BALL_SPEED_FACTOR
 
         if ball_y < tu.header_height() + self.BALL_RADIUS:
+            self.ball_on_wall_sound.play()
             ball_y = tu.header_height() + self.BALL_RADIUS
             self.ball_velocity_y = self.BALL_SPEED_FACTOR
         elif ball_y > self.screen_size[1] - tu.footer_height() - \
