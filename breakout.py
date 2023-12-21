@@ -30,6 +30,7 @@ pygame.display.set_caption('Breakout, by jaymandz')
 pygame.mixer.music.set_endevent(locals.USEREVENT + 1)
 
 pygame.mixer.music.load('audio/Andrey Avkhimovich - Like A Cake.mp3')
+pygame.mixer.music.set_volume(0.2)
 pygame.mixer.music.play()
 
 while True:
