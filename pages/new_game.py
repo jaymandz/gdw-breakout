@@ -25,6 +25,9 @@ class NewGamePage(object):
         self.ball_on_paddle_sound = pygame.mixer.Sound(
             'audio/ball-on-paddle.ogg'
         )
+        self.ball_launch_sound = pygame.mixer.Sound(
+            'audio/ball-launch.ogg'
+        )
 
     def _ball_in_play_position(self, ball_x, ball_y):
         if ball_x < self.BALL_RADIUS:
@@ -135,6 +138,7 @@ class NewGamePage(object):
         if pressed_keys[locals.K_ESCAPE]:
             return 'pause'
         elif pressed_keys[locals.K_SPACE] and not self.is_ball_in_play:
+            self.ball_launch_sound.play()
             self.is_ball_in_play = True
             self.ball_velocity_x = self.BALL_SPEED_FACTOR
             self.ball_velocity_y = -self.BALL_SPEED_FACTOR
