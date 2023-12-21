@@ -31,6 +31,9 @@ class NewGamePage(object):
         self.ball_on_wall_sound = pygame.mixer.Sound(
             'audio/ball-on-wall.ogg'
         )
+        self.tut_tut_sound = pygame.mixer.Sound(
+            'audio/tut-tut.ogg'
+        )
 
     def _ball_in_play_position(self, ball_x, ball_y):
         if ball_x < self.BALL_RADIUS:
@@ -55,6 +58,7 @@ class NewGamePage(object):
               self.BALL_RADIUS - self.PADDLE_SIZE[1]
             self.ball_velocity_y = -self.BALL_SPEED_FACTOR
         elif ball_y > self.screen_size[1] - tu.footer_height():
+            self.tut_tut_sound.play()
             self.num_lives -= 1
 
             self.is_ball_in_play = False
