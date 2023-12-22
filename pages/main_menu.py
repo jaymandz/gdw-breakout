@@ -9,7 +9,7 @@ import text_utils as tu
 class MainMenuPage(object):
     def __init__(self, screen_size):
         self.surface = pygame.surface.Surface(screen_size)
-        self.num_items = 4
+        self.num_items = 5
         self.curr_item_index = 0
 
     def _item_color(self, index):
@@ -29,9 +29,10 @@ class MainMenuPage(object):
             self.curr_item_index = (self.curr_item_index - 1) % ni
         elif pressed_keys[locals.K_RETURN]:
             if self.curr_item_index == 0: return 'new_game'
-            #elif self.curr_item_index == 1: return 'controls'
-            elif self.curr_item_index == 2: return 'credits'
-            elif self.curr_item_index == 3: sys.exit()
+            #elif self.curr_item_index == 1: return 'settings'
+            #elif self.curr_item_index == 2: return 'controls'
+            elif self.curr_item_index == 3: return 'credits'
+            elif self.curr_item_index == 4: sys.exit()
         elif pressed_keys[locals.K_ESCAPE]: sys.exit()
 
         return 'main_menu'
@@ -44,16 +45,20 @@ class MainMenuPage(object):
             (40, 40),
         )
         self.surface.blit(
-            tu.regular_text(self._item_color(1), 'Controls'),
+            tu.regular_text(self._item_color(1), 'Settings'),
             (40, 40 + tu.line_size(1.5)),
         )
         self.surface.blit(
-            tu.regular_text(self._item_color(2), 'Credits'),
+            tu.regular_text(self._item_color(2), 'Controls'),
             (40, 40 + tu.line_size(1.5) * 2),
         )
         self.surface.blit(
-            tu.regular_text(self._item_color(3), 'Exit'),
+            tu.regular_text(self._item_color(3), 'Credits'),
             (40, 40 + tu.line_size(1.5) * 3),
+        )
+        self.surface.blit(
+            tu.regular_text(self._item_color(4), 'Exit'),
+            (40, 40 + tu.line_size(1.5) * 4),
         )
 
         # Footer
