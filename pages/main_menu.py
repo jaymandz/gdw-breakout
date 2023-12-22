@@ -29,7 +29,7 @@ class MainMenuPage(object):
             self.curr_item_index = (self.curr_item_index - 1) % ni
         elif pressed_keys[locals.K_RETURN]:
             if self.curr_item_index == 0: return 'new_game'
-            #elif self.curr_item_index == 1: return 'settings'
+            elif self.curr_item_index == 1: return 'settings'
             #elif self.curr_item_index == 2: return 'controls'
             elif self.curr_item_index == 3: return 'credits'
             elif self.curr_item_index == 4: sys.exit()
