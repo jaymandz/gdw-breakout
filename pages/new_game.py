@@ -35,25 +35,32 @@ class NewGamePage(object):
             'audio/tut-tut.ogg'
         )
 
+    def _play_panned(self, sound, x):
+        channel = sound.play()
+        if channel is not None:
+            right = x / self.screen_size[0]
+            left = 1.0 - right
+            channel.set_volume(left, right)
+
     def _ball_in_play_position(self, ball_x, ball_y):
         if ball_x < self.BALL_RADIUS:
-            self.ball_on_wall_sound.play()
+            self._play_panned(self.ball_on_wall_sound, ball_x)
             ball_x = self.BALL_RADIUS
             self.ball_velocity_x = self.BALL_SPEED_FACTOR
         elif ball_x > self.screen_size[0] - self.BALL_RADIUS:
-            self.ball_on_wall_sound.play()
+            self._play_panned(self.ball_on_wall_sound, ball_x)
             ball_x = self.screen_size[0] - self.BALL_RADIUS
             self.ball_velocity_x = -self.BALL_SPEED_FACTOR
 
         if ball_y < tu.header_height() + self.BALL_RADIUS:
-            self.ball_on_wall_sound.play()
+            self._play_panned(self.ball_on_wall_sound, ball_x)
             ball_y = tu.header_height() + self.BALL_RADIUS
             self.ball_velocity_y = self.BALL_SPEED_FACTOR
         elif ball_y > self.screen_size[1] - tu.footer_height() - \
           self.BALL_RADIUS - self.PADDLE_SIZE[1] and \
           ball_x >= self.paddle_position[0] and \
           ball_x <= self.paddle_position[0] + self.PADDLE_SIZE[0]:
-            self.ball_on_paddle_sound.play()
+            self._play_panned(self.ball_on_paddle_sound, ball_x)
             ball_y = self.screen_size[1] - tu.footer_height() - \
               self.BALL_RADIUS - self.PADDLE_SIZE[1]
             self.ball_velocity_y = -self.BALL_SPEED_FACTOR
@@ -148,7 +155,7 @@ class NewGamePage(object):
         if pressed_keys[locals.K_ESCAPE]:
             return 'pause'
         elif pressed_keys[locals.K_SPACE] and not self.is_ball_in_play:
-            self.ball_launch_sound.play()
+            self._play_panned(self.ball_launch_sound, self.ball_position[0])
             self.is_ball_in_play = True
             self.ball_velocity_x = self.BALL_SPEED_FACTOR
             self.ball_velocity_y = -self.BALL_SPEED_FACTOR
