@@ -5,7 +5,8 @@ import colors
 import text_utils as tu
 
 class CreditsPage(object):
-    def __init__(self, screen_size):
+    def __init__(self, screen_size, settings):
+        self.settings = settings
         self.surface = pygame.surface.Surface(screen_size)
 
     def load(self):
@@ -13,9 +14,9 @@ class CreditsPage(object):
 
     def handle_event(self, event):
         pressed_keys = pygame.key.get_pressed()
-        if pressed_keys[locals.K_ESCAPE]: return 'main_menu'
+        if pressed_keys[locals.K_ESCAPE]: return 'main_menu', self.settings
 
-        return 'credits'
+        return 'credits', self.settings
 
     def draw(self):
         self.surface.fill(colors.beige)

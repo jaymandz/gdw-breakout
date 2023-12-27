@@ -14,8 +14,10 @@ class NewGamePage(object):
     PADDLE_SPEED_FACTOR = 0.5
     BALL_SPEED_FACTOR = 0.2
 
-    def __init__(self, screen_size):
+    def __init__(self, screen_size, settings):
         self.screen_size = screen_size
+        self.settings = settings
+
         self.surface = pygame.surface.Surface(screen_size)
         self.clock = pygame.time.Clock()
 
@@ -36,6 +38,7 @@ class NewGamePage(object):
         )
 
     def _play_panned(self, sound, x):
+        if not self.settings['sfx']: return
         channel = sound.play()
         if channel is not None:
             right = x / self.screen_size[0]
@@ -65,7 +68,7 @@ class NewGamePage(object):
               self.BALL_RADIUS - self.PADDLE_SIZE[1]
             self.ball_velocity_y = -self.BALL_SPEED_FACTOR
         elif ball_y > self.screen_size[1] - tu.footer_height():
-            self.tut_tut_sound.play()
+            if self.settings['sfx']: self.tut_tut_sound.play()
             self.num_lives -= 1
 
             self.is_ball_in_play = False
@@ -153,7 +156,7 @@ class NewGamePage(object):
 
         pressed_keys = pygame.key.get_pressed()
         if pressed_keys[locals.K_ESCAPE]:
-            return 'pause'
+            return 'pause', self.settings
         elif pressed_keys[locals.K_SPACE] and not self.is_ball_in_play:
             self._play_panned(self.ball_launch_sound, self.ball_position[0])
             self.is_ball_in_play = True
@@ -168,7 +171,7 @@ class NewGamePage(object):
             if not self.is_ball_in_play:
               self.ball_velocity_x = self.PADDLE_SPEED_FACTOR
 
-        return 'new_game'
+        return 'new_game', self.settings
 
     def draw(self):
         time_elapsed_ms = self.clock.tick()

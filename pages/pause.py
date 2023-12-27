@@ -5,8 +5,10 @@ import colors
 import text_utils as tu
 
 class PausePage(object):
-    def __init__(self, screen_size):
+    def __init__(self, screen_size, settings):
         self.screen_size = screen_size
+        self.settings = settings
+
         self.surface = pygame.surface.Surface(screen_size)
         self.num_items = 2
         self.curr_item_index = 0
@@ -19,20 +21,21 @@ class PausePage(object):
         self.curr_item_index = 0
 
     def handle_event(self, event):
+        settings = self.settings
         ni = self.num_items
 
         pressed_keys = pygame.key.get_pressed()
         if pressed_keys[locals.K_ESCAPE]:
-            return 'new_game'
+            return 'new_game', settings
         elif pressed_keys[locals.K_UP]:
             self.curr_item_index = (self.curr_item_index - 1) % ni
         elif pressed_keys[locals.K_DOWN]:
             self.curr_item_index = (self.curr_item_index + 1) % ni
         elif pressed_keys[locals.K_RETURN]:
-            if self.curr_item_index == 0: return 'new_game'
-            elif self.curr_item_index == 1: return 'main_menu'
+            if self.curr_item_index == 0: return 'new_game', settings
+            elif self.curr_item_index == 1: return 'main_menu', settings
 
-        return 'pause'
+        return 'pause', settings
 
     def draw(self):
         self.surface.fill(colors.beige)

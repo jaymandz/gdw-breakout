@@ -7,7 +7,8 @@ import colors
 import text_utils as tu
 
 class MainMenuPage(object):
-    def __init__(self, screen_size):
+    def __init__(self, screen_size, settings):
+        self.settings = settings
         self.surface = pygame.surface.Surface(screen_size)
         self.num_items = 5
         self.curr_item_index = 0
@@ -20,7 +21,9 @@ class MainMenuPage(object):
         self.curr_item_index = 0
 
     def handle_event(self, event):
+        settings = self.settings
         ni = self.num_items
+        quit_event = pygame.event.Event(locals.QUIT)
 
         pressed_keys = pygame.key.get_pressed()
         if pressed_keys[locals.K_DOWN]:
@@ -28,14 +31,14 @@ class MainMenuPage(object):
         elif pressed_keys[locals.K_UP]:
             self.curr_item_index = (self.curr_item_index - 1) % ni
         elif pressed_keys[locals.K_RETURN]:
-            if self.curr_item_index == 0: return 'new_game'
-            elif self.curr_item_index == 1: return 'settings'
+            if self.curr_item_index == 0: return 'new_game', settings
+            elif self.curr_item_index == 1: return 'settings', settings
             #elif self.curr_item_index == 2: return 'controls'
-            elif self.curr_item_index == 3: return 'credits'
-            elif self.curr_item_index == 4: sys.exit()
-        elif pressed_keys[locals.K_ESCAPE]: sys.exit()
+            elif self.curr_item_index == 3: return 'credits', settings
+            elif self.curr_item_index == 4: pygame.event.post(quit_event)
+        elif pressed_keys[locals.K_ESCAPE]: pygame.event.post(quit_event)
 
-        return 'main_menu'
+        return 'main_menu', settings
 
     def draw(self):
         self.surface.fill(colors.beige)
