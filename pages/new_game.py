@@ -38,7 +38,7 @@ class NewGamePage(object):
         )
 
     def _play_panned(self, sound, x):
-        if not self.settings['sfx']: return
+        if not self.settings['sfx_on']: return
         channel = sound.play()
         if channel is not None:
             right = x / self.screen_size[0]
@@ -68,7 +68,7 @@ class NewGamePage(object):
               self.BALL_RADIUS - self.PADDLE_SIZE[1]
             self.ball_velocity_y = -self.BALL_SPEED_FACTOR
         elif ball_y > self.screen_size[1] - tu.footer_height():
-            if self.settings['sfx']: self.tut_tut_sound.play()
+            if self.settings['sfx_on']: self.tut_tut_sound.play()
             self.num_lives -= 1
 
             self.is_ball_in_play = False

@@ -19,7 +19,7 @@ screen = pygame.display.set_mode(SCREEN_SIZE, 0, 32)
 
 if not os.path.isfile('./settings.json'):
     with open('./settings.json', 'w') as sf:
-        data = { 'music': True, 'sfx': True }
+        data = { 'music_on': True, 'music_volume': 10, 'sfx_on': True }
         json.dump(data, sf)
         sf.close()
 
@@ -42,9 +42,9 @@ pygame.display.set_caption('Breakout, by jaymandz')
 pygame.mixer.music.set_endevent(locals.USEREVENT + 1)
 
 pygame.mixer.music.load('audio/Andrey Avkhimovich - Like A Cake.mp3')
-pygame.mixer.music.set_volume(0.2)
+pygame.mixer.music.set_volume(settings['music_volume'] * 0.1)
 
-if settings['music']: pygame.mixer.music.play()
+if settings['music_on']: pygame.mixer.music.play()
 
 while True:
     for event in pygame.event.get():
@@ -59,7 +59,7 @@ while True:
             settings_file.close()
             sys.exit()
         elif event.type == locals.USEREVENT + 1:
-            if settings['music']: pygame.mixer.music.play()
+            if settings['music_on']: pygame.mixer.music.play()
 
     pages[curr_page_key].draw()
     screen.blit(pages[curr_page_key].surface, (0, 0))
