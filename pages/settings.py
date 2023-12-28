@@ -63,7 +63,7 @@ class SettingsPage(object):
     def draw(self):
         self.surface.fill(colors.beige)
 
-        music_text = '[{}] Music'.format(
+        music_text = ' [{}]  Music'.format(
             'x' if self.settings['music_on'] else ' '
         )
         self.surface.blit(
@@ -72,7 +72,7 @@ class SettingsPage(object):
         )
 
         music_volume = self.settings['music_volume']
-        music_volume_text = '[{}] Music volume'.format(
+        music_volume_text = '\u2039[{}]\u203a Music volume'.format(
             'x' if music_volume == 10 else music_volume
         )
         self.surface.blit(
@@ -80,7 +80,7 @@ class SettingsPage(object):
             (40, 40 + tu.line_size(1.5)),
         )
 
-        effects_text = '[{}] Sound effects'.format(
+        effects_text = ' [{}]  Sound effects'.format(
             'x' if self.settings['sfx_on'] else ' '
         )
         self.surface.blit(
