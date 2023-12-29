@@ -21,6 +21,8 @@ class NewGamePage(object):
         self.surface = pygame.surface.Surface(screen_size)
         self.clock = pygame.time.Clock()
 
+        self.game_surface = pygame.surface.Surface(screen_size)
+
         self.brick_smash_sound = pygame.mixer.Sound(
             'audio/brick-smash.ogg'
         )
@@ -209,35 +211,35 @@ class NewGamePage(object):
         self.paddle_position = (paddle_x, self.paddle_position[1])
         self.ball_position = self._get_ball_position(time_elapsed_ms)
 
-        self.surface.fill(colors.beige)
+        self.game_surface.fill(colors.beige)
 
         # Header
-        self.surface.blit(
+        self.game_surface.blit(
             tu.regular_text(colors.gray, str(self.num_lives)+' lives'),
             (20, 20),
         )
 
         score_surface = tu.regular_text(colors.gray, str(self.score))
-        self.surface.blit(
+        self.game_surface.blit(
             score_surface,
             (self.screen_size[0]/2 - score_surface.get_size()[0]/2, 20),
         )
 
         # Draw bricks
         for brick in self.bricks:
-            if brick[2]: pygame.draw.rect(self.surface, brick[0],
+            if brick[2]: pygame.draw.rect(self.game_surface, brick[0],
               locals.Rect(brick[1], self.BRICK_SIZE))
 
         # Draw paddle
         pygame.draw.rect(
-            self.surface,
+            self.game_surface,
             colors.black,
             locals.Rect(self.paddle_position, self.PADDLE_SIZE),
         )
 
         # Draw ball
         pygame.draw.circle(
-            self.surface,
+            self.game_surface,
             colors.dark_red,
             self.ball_position,
             self.BALL_RADIUS,
@@ -246,7 +248,9 @@ class NewGamePage(object):
         # Footer
         footer_text = '<Space>: Launch, \u2190\u2192: Move, '+ \
           '<Esc>: Pause'
-        self.surface.blit(
+        self.game_surface.blit(
             tu.regular_text(colors.gray, footer_text),
             (20, 480 - 20 - tu.line_size()),
         )
+
+        self.surface.blit(self.game_surface, (0, 0))
