@@ -1,4 +1,4 @@
-import math
+from math import floor
 
 import pygame
 from pygame import locals
@@ -89,7 +89,31 @@ class NewGamePage(object):
         if not self.is_ball_in_play: return brick, ball_x, ball_y
         if not brick[2]: return brick, ball_x, ball_y
 
-        # Find a damn good bouncing/collision algorithm first!
+        if self.ball_velocity_y > 0 and ball_x >= brick[1][0] and \
+          ball_x <= brick[1][0] + self.BRICK_SIZE[0] and floor(ball_y) == \
+          brick[1][1] - self.BALL_RADIUS:
+            self._play_panned(self.brick_smash_sound, ball_x)
+            brick = (brick[0], brick[1], False)
+            self.ball_velocity_y = -self.BALL_SPEED_FACTOR
+        elif self.ball_velocity_y < 0 and ball_x >= brick[1][0] and \
+          ball_x <= brick[1][0] + self.BRICK_SIZE[0] and floor(ball_y) == \
+          brick[1][1] + self.BRICK_SIZE[1] + self.BALL_RADIUS:
+            self._play_panned(self.brick_smash_sound, ball_x)
+            brick = (brick[0], brick[1], False)
+            self.ball_velocity_y = self.BALL_SPEED_FACTOR
+
+        elif self.ball_velocity_x > 0 and ball_y >= brick[1][1] and \
+          ball_y <= brick[1][1] + self.BRICK_SIZE[1] and floor(ball_x) == \
+          brick[1][0] - self.BALL_RADIUS:
+            self._play_panned(self.brick_smash_sound, ball_x)
+            brick = (brick[0], brick[1], False)
+            self.ball_velocity_x = -self.BALL_SPEED_FACTOR
+        elif self.ball_velocity_x < 0 and ball_y >= brick[1][1] and \
+          ball_y <= brick[1][1] + self.BRICK_SIZE[1] and floor(ball_x) == \
+          brick[1][0] + self.BRICK_SIZE[0] + self.BALL_RADIUS:
+            self._play_panned(self.brick_smash_sound, ball_x)
+            brick = (brick[0], brick[1], False)
+            self.ball_velocity_x = self.BALL_SPEED_FACTOR
 
         return brick, ball_x, ball_y
 
