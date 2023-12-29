@@ -12,7 +12,7 @@ class NewGamePage(object):
     BALL_RADIUS = 10
 
     PADDLE_SPEED_FACTOR = 0.5
-    BALL_SPEED_FACTOR = 0.2
+    BALL_SPEED_FACTOR = 0.1
 
     def __init__(self, screen_size, settings):
         self.screen_size = screen_size
@@ -89,32 +89,36 @@ class NewGamePage(object):
 
     def _check_brick_collision(self, brick, ball_x, ball_y):
         if not self.is_ball_in_play: return brick, ball_x, ball_y
-        if not brick[2]: return brick, ball_x, ball_y
+        if not brick[3]: return brick, ball_x, ball_y
 
         if self.ball_velocity_y > 0 and ball_x >= brick[1][0] and \
           ball_x <= brick[1][0] + self.BRICK_SIZE[0] and floor(ball_y) == \
           brick[1][1] - self.BALL_RADIUS:
             self._play_panned(self.brick_smash_sound, ball_x)
-            brick = (brick[0], brick[1], False)
+            self.score += brick[2]
+            brick = (brick[0], brick[1], brick[2], False)
             self.ball_velocity_y = -self.BALL_SPEED_FACTOR
         elif self.ball_velocity_y < 0 and ball_x >= brick[1][0] and \
           ball_x <= brick[1][0] + self.BRICK_SIZE[0] and floor(ball_y) == \
           brick[1][1] + self.BRICK_SIZE[1] + self.BALL_RADIUS:
             self._play_panned(self.brick_smash_sound, ball_x)
-            brick = (brick[0], brick[1], False)
+            self.score += brick[2]
+            brick = (brick[0], brick[1], brick[2], False)
             self.ball_velocity_y = self.BALL_SPEED_FACTOR
 
         elif self.ball_velocity_x > 0 and ball_y >= brick[1][1] and \
           ball_y <= brick[1][1] + self.BRICK_SIZE[1] and floor(ball_x) == \
           brick[1][0] - self.BALL_RADIUS:
             self._play_panned(self.brick_smash_sound, ball_x)
-            brick = (brick[0], brick[1], False)
+            self.score += brick[2]
+            brick = (brick[0], brick[1], brick[2], False)
             self.ball_velocity_x = -self.BALL_SPEED_FACTOR
         elif self.ball_velocity_x < 0 and ball_y >= brick[1][1] and \
           ball_y <= brick[1][1] + self.BRICK_SIZE[1] and floor(ball_x) == \
           brick[1][0] + self.BRICK_SIZE[0] + self.BALL_RADIUS:
             self._play_panned(self.brick_smash_sound, ball_x)
-            brick = (brick[0], brick[1], False)
+            self.score += brick[2]
+            brick = (brick[0], brick[1], brick[2], False)
             self.ball_velocity_x = self.BALL_SPEED_FACTOR
 
         return brick, ball_x, ball_y
@@ -136,21 +140,21 @@ class NewGamePage(object):
     def _initialize_bricks(self):
         bricks = []
         for b in range(0, self.screen_size[0], 46):
-            bricks.append((colors.red, (b, tu.header_height() + 80),
+            bricks.append((colors.red, (b, tu.header_height() + 80), 7,
               True))
-            bricks.append((colors.red, (b, tu.header_height() + 100),
+            bricks.append((colors.red, (b, tu.header_height() + 100), 7,
               True))
-            bricks.append((colors.orange, (b, tu.header_height() + 120),
+            bricks.append((colors.orange, (b, tu.header_height() + 120), 5,
               True))
-            bricks.append((colors.orange, (b, tu.header_height() + 140),
+            bricks.append((colors.orange, (b, tu.header_height() + 140), 5,
               True))
-            bricks.append((colors.green, (b, tu.header_height() + 160),
+            bricks.append((colors.green, (b, tu.header_height() + 160), 3,
               True))
-            bricks.append((colors.green, (b, tu.header_height() + 180),
+            bricks.append((colors.green, (b, tu.header_height() + 180), 3,
               True))
-            bricks.append((colors.yellow, (b, tu.header_height() + 200),
+            bricks.append((colors.yellow, (b, tu.header_height() + 200), 1,
               True))
-            bricks.append((colors.yellow, (b, tu.header_height() + 220),
+            bricks.append((colors.yellow, (b, tu.header_height() + 220), 1,
               True))
         return bricks
 
@@ -227,7 +231,7 @@ class NewGamePage(object):
 
         # Draw bricks
         for brick in self.bricks:
-            if brick[2]: pygame.draw.rect(self.game_surface, brick[0],
+            if brick[3]: pygame.draw.rect(self.game_surface, brick[0],
               locals.Rect(brick[1], self.BRICK_SIZE))
 
         # Draw paddle
