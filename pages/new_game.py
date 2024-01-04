@@ -87,39 +87,73 @@ class NewGamePage(object):
 
         return ball_x, ball_y
 
+    def _add_brick_hit_and_adjust_speed(self, brick):
+        is_speed_to_be_increased = False
+
+        self.num_hits += 1
+        if brick[0] == colors.orange:
+            if not self.is_contact_with_orange_blocks_made:
+              is_speed_to_be_increased = True
+            self.is_contact_with_orange_blocks_made = True
+        elif brick[0] == colors.red:
+            if not self.is_contact_with_red_blocks_made:
+              is_speed_to_be_increased = True
+            self.is_contact_with_red_blocks_made = True
+        elif self.num_hits == 4: is_speed_to_be_increased = True
+        elif self.num_hits == 12: is_speed_to_be_increased = True
+
+        if is_speed_to_be_increased:
+            if self.ball_velocity_x < 0: self.ball_velocity_x -= 0.03
+            elif self.ball_velocity_x > 0: self.ball_velocity_x += 0.03
+
+            if self.ball_velocity_y < 0: self.ball_velocity_y -= 0.03
+            elif self.ball_velocity_y > 0: self.ball_velocity_y += 0.03
+
+            self.BALL_SPEED_FACTOR += 0.03
+
     def _check_brick_collision(self, brick, ball_x, ball_y):
         if not self.is_ball_in_play: return brick, ball_x, ball_y
         if not brick[3]: return brick, ball_x, ball_y
 
+        is_hit = False
+
+        # Hit from the top
         if self.ball_velocity_y > 0 and ball_x >= brick[1][0] and \
           ball_x <= brick[1][0] + self.BRICK_SIZE[0] and floor(ball_y) == \
           brick[1][1] - self.BALL_RADIUS:
             self._play_panned(self.brick_smash_sound, ball_x)
             self.score += brick[2]
-            brick = (brick[0], brick[1], brick[2], False)
+            is_hit = True
             self.ball_velocity_y = -self.BALL_SPEED_FACTOR
+        # Hit from the bottom
         elif self.ball_velocity_y < 0 and ball_x >= brick[1][0] and \
           ball_x <= brick[1][0] + self.BRICK_SIZE[0] and floor(ball_y) == \
           brick[1][1] + self.BRICK_SIZE[1] + self.BALL_RADIUS:
             self._play_panned(self.brick_smash_sound, ball_x)
             self.score += brick[2]
-            brick = (brick[0], brick[1], brick[2], False)
+            is_hit = True
             self.ball_velocity_y = self.BALL_SPEED_FACTOR
 
+        # Hit from the left
         elif self.ball_velocity_x > 0 and ball_y >= brick[1][1] and \
           ball_y <= brick[1][1] + self.BRICK_SIZE[1] and floor(ball_x) == \
           brick[1][0] - self.BALL_RADIUS:
             self._play_panned(self.brick_smash_sound, ball_x)
             self.score += brick[2]
-            brick = (brick[0], brick[1], brick[2], False)
+            is_hit = True
             self.ball_velocity_x = -self.BALL_SPEED_FACTOR
+        # Hit from the right
         elif self.ball_velocity_x < 0 and ball_y >= brick[1][1] and \
           ball_y <= brick[1][1] + self.BRICK_SIZE[1] and floor(ball_x) == \
           brick[1][0] + self.BRICK_SIZE[0] + self.BALL_RADIUS:
             self._play_panned(self.brick_smash_sound, ball_x)
             self.score += brick[2]
-            brick = (brick[0], brick[1], brick[2], False)
+            is_hit = True
             self.ball_velocity_x = self.BALL_SPEED_FACTOR
+
+        if is_hit:
+            brick = (brick[0], brick[1], brick[2], False)
+            self._add_brick_hit_and_adjust_speed(brick)
 
         return brick, ball_x, ball_y
 
@@ -177,7 +211,11 @@ class NewGamePage(object):
         self.is_ball_in_play = False
 
         self.num_lives = 3
+        self.num_hits = 0
         self.score = 0
+
+        self.is_contact_with_orange_blocks_made = False
+        self.is_contact_with_red_blocks_made = False
 
     def handle_event(self, event):
         if event.type == locals.KEYUP:
