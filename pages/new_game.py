@@ -7,7 +7,8 @@ import colors
 import text_utils as tu
 
 class NewGamePage(object):
-    PADDLE_SIZE = (80, 10)
+    PADDLE_WIDTH = 120
+    PADDLE_HEIGHT = 10
     BRICK_SIZE = (40, 16)
     BALL_RADIUS = 10
 
@@ -58,25 +59,26 @@ class NewGamePage(object):
             self.ball_velocity_x = -self.BALL_SPEED_FACTOR
 
         if ball_y < tu.header_height() + self.BALL_RADIUS:
+            self.paddle_size = (self.PADDLE_WIDTH / 2, self.PADDLE_HEIGHT)
             self._play_panned(self.ball_on_wall_sound, ball_x)
             ball_y = tu.header_height() + self.BALL_RADIUS
             self.ball_velocity_y = self.BALL_SPEED_FACTOR
         elif ball_y > self.screen_size[1] - tu.footer_height() - \
-          self.BALL_RADIUS - self.PADDLE_SIZE[1] and \
+          self.BALL_RADIUS - self.paddle_size[1] and \
           ball_x >= self.paddle_position[0] and \
-          ball_x <= self.paddle_position[0] + self.PADDLE_SIZE[0]:
+          ball_x <= self.paddle_position[0] + self.paddle_size[0]:
             self._play_panned(self.ball_on_paddle_sound, ball_x)
             ball_y = self.screen_size[1] - tu.footer_height() - \
-              self.BALL_RADIUS - self.PADDLE_SIZE[1]
+              self.BALL_RADIUS - self.paddle_size[1]
             self.ball_velocity_y = -self.BALL_SPEED_FACTOR
         elif ball_y > self.screen_size[1] - tu.footer_height():
             if self.settings['sfx_on']: self.tut_tut_sound.play()
             self.num_lives -= 1
 
             self.is_ball_in_play = False
-            ball_x = self.paddle_position[0] + self.PADDLE_SIZE[0] / 2
+            ball_x = self.paddle_position[0] + self.paddle_size[0] / 2
             ball_y = self.screen_size[1] - tu.footer_height() - \
-              self.PADDLE_SIZE[1] - self.BALL_RADIUS
+              self.paddle_size[1] - self.BALL_RADIUS
             self.ball_velocity_x = self.paddle_velocity
             self.ball_velocity_y = 0
 
@@ -110,6 +112,7 @@ class NewGamePage(object):
             elif self.ball_velocity_y > 0: self.ball_velocity_y += 0.03
 
             self.BALL_SPEED_FACTOR += 0.03
+            self.speed_multiplier += 1
 
     def _check_brick_collision(self, brick, ball_x, ball_y):
         if not self.is_ball_in_play: return brick, ball_x, ball_y
@@ -165,7 +168,7 @@ class NewGamePage(object):
 
         ball_x, ball_y = self._ball_in_play_position(ball_x, ball_y)
         if not self.is_ball_in_play:
-            half_paddle = self.PADDLE_SIZE[0] / 2
+            half_paddle = self.paddle_size[0] / 2
             if ball_x < half_paddle: ball_x = half_paddle
             elif ball_x > 640 - half_paddle: ball_x = 640 - half_paddle
 
@@ -192,14 +195,22 @@ class NewGamePage(object):
               True))
         return bricks
 
+    def _speed_surface_color(self):
+        if self.speed_multiplier == 1: return colors.gray
+        elif self.speed_multiplier == 2: return colors.black
+        elif self.speed_multiplier == 3: return colors.green
+        elif self.speed_multiplier == 4: return colors.orange
+        elif self.speed_multiplier == 5: return colors.red
+
     def load(self):
+        self.paddle_size = (self.PADDLE_WIDTH, self.PADDLE_HEIGHT)
         self.paddle_position = (
-            self.screen_size[0] / 2 - self.PADDLE_SIZE[0] / 2,
-            self.screen_size[1] - self.PADDLE_SIZE[1] - tu.footer_height(),
+            self.screen_size[0] / 2 - self.paddle_size[0] / 2,
+            self.screen_size[1] - self.paddle_size[1] - tu.footer_height(),
         )
         self.ball_position = (
             self.screen_size[0] / 2,
-            self.screen_size[1] - self.PADDLE_SIZE[1] - \
+            self.screen_size[1] - self.paddle_size[1] - \
               self.BALL_RADIUS - tu.footer_height(),
         )
 
@@ -213,6 +224,7 @@ class NewGamePage(object):
         self.num_lives = 3
         self.num_hits = 0
         self.score = 0
+        self.speed_multiplier = 1
 
         self.is_contact_with_orange_blocks_made = False
         self.is_contact_with_red_blocks_made = False
@@ -247,8 +259,8 @@ class NewGamePage(object):
         paddle_x = self.paddle_position[0] + self.paddle_velocity * \
           time_elapsed_ms
         if paddle_x < 0: paddle_x = 0
-        elif paddle_x > 640 - self.PADDLE_SIZE[0]:
-            paddle_x = 640 - self.PADDLE_SIZE[0]
+        elif paddle_x > 640 - self.paddle_size[0]:
+            paddle_x = 640 - self.paddle_size[0]
 
         self.paddle_position = (paddle_x, self.paddle_position[1])
         self.ball_position = self._get_ball_position(time_elapsed_ms)
@@ -267,6 +279,15 @@ class NewGamePage(object):
             (self.screen_size[0]/2 - score_surface.get_size()[0]/2, 20),
         )
 
+        speed_surface = tu.regular_text(
+            self._speed_surface_color(),
+            'Speed x '+str(self.speed_multiplier),
+        )
+        self.game_surface.blit(
+            speed_surface,
+            (self.screen_size[0]-speed_surface.get_size()[0]-20, 20),
+        )
+
         # Draw bricks
         for brick in self.bricks:
             if brick[3]: pygame.draw.rect(self.game_surface, brick[0],
@@ -276,7 +297,7 @@ class NewGamePage(object):
         pygame.draw.rect(
             self.game_surface,
             colors.black,
-            locals.Rect(self.paddle_position, self.PADDLE_SIZE),
+            locals.Rect(self.paddle_position, self.paddle_size),
         )
 
         # Draw ball
