@@ -23,6 +23,7 @@ class NewGamePage(object):
         self.clock = pygame.time.Clock()
 
         self.game_surface = pygame.surface.Surface(screen_size)
+        self.pause_surface = pygame.surface.Surface(screen_size)
 
         self.brick_smash_sound = pygame.mixer.Sound(
             'audio/brick-smash.ogg'
@@ -202,6 +203,10 @@ class NewGamePage(object):
         elif self.speed_multiplier == 4: return colors.orange
         elif self.speed_multiplier == 5: return colors.red
 
+    def _pause_item_color(self, index):
+        if index == self.curr_pause_item_index: return colors.dark_red
+        else: return colors.black
+
     def load(self):
         self.paddle_size = (self.PADDLE_WIDTH, self.PADDLE_HEIGHT)
         self.paddle_position = (
@@ -229,6 +234,10 @@ class NewGamePage(object):
         self.is_contact_with_orange_blocks_made = False
         self.is_contact_with_red_blocks_made = False
 
+        self.is_paused = False
+        self.num_pause_items = 2
+        self.curr_pause_item_index = 0
+
     def handle_event(self, event):
         if event.type == locals.KEYUP:
             self.paddle_velocity = 0
@@ -236,7 +245,7 @@ class NewGamePage(object):
 
         pressed_keys = pygame.key.get_pressed()
         if pressed_keys[locals.K_ESCAPE]:
-            return 'pause', self.settings
+            self.is_paused = not self.is_paused
         elif pressed_keys[locals.K_SPACE] and not self.is_ball_in_play:
             self._play_panned(self.ball_launch_sound, self.ball_position[0])
             self.is_ball_in_play = True
@@ -250,6 +259,18 @@ class NewGamePage(object):
             self.paddle_velocity = self.PADDLE_SPEED_FACTOR
             if not self.is_ball_in_play:
               self.ball_velocity_x = self.PADDLE_SPEED_FACTOR
+        elif pressed_keys[locals.K_DOWN] and self.is_paused:
+            npi = self.num_pause_items
+            cpii = self.curr_pause_item_index
+            self.curr_pause_item_index = (cpii + 1) % npi
+        elif pressed_keys[locals.K_UP] and self.is_paused:
+            npi = self.num_pause_items
+            cpii = self.curr_pause_item_index
+            self.curr_pause_item_index = (cpii - 1) % npi
+        elif pressed_keys[locals.K_RETURN] and self.is_paused:
+            cpii = self.curr_pause_item_index
+            if cpii == 0: self.is_paused = False
+            elif cpii == 1: return 'main_menu', self.settings
 
         return 'new_game', self.settings
 
@@ -308,12 +329,41 @@ class NewGamePage(object):
             self.BALL_RADIUS,
         )
 
-        # Footer
-        footer_text = '<Space>: Launch, \u2190\u2192: Move, '+ \
+        # Game surface footer
+        gs_footer_text = '<Space>: Launch, \u2190\u2192: Move, '+ \
           '<Esc>: Pause'
         self.game_surface.blit(
-            tu.regular_text(colors.gray, footer_text),
+            tu.regular_text(colors.gray, gs_footer_text),
             (20, 480 - 20 - tu.line_size()),
         )
 
-        self.surface.blit(self.game_surface, (0, 0))
+        self.pause_surface.fill(colors.beige)
+
+        sentence_surface = tu.regular_text(
+            colors.blue,
+            'The game is paused.'
+        )
+        self.pause_surface.blit(
+            sentence_surface,
+            (self.screen_size[0]/2 - sentence_surface.get_size()[0]/2, 20),
+        )
+
+        self.pause_surface.blit(
+            tu.regular_text(self._pause_item_color(0), 'Resume'),
+            (40, tu.header_height()),
+        )
+
+        self.pause_surface.blit(
+            tu.regular_text(self._pause_item_color(1), 'Main menu'),
+            (40, tu.header_height() + tu.line_size(1.5)),
+        )
+
+        ps_footer_text = '\u2191\u2193: Highlight, <Enter>: Select, '+ \
+          '<Esc>: Resume'
+        self.pause_surface.blit(
+            tu.regular_text(colors.gray, ps_footer_text),
+            (20, 480 - 20 - tu.line_size()),
+        )
+
+        if self.is_paused: self.surface.blit(self.pause_surface, (0, 0))
+        else: self.surface.blit(self.game_surface, (0, 0))
