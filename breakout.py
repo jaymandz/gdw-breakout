@@ -16,11 +16,20 @@ SCREEN_SIZE = (640, 480)
 
 screen = pygame.display.set_mode(SCREEN_SIZE, 0, 32)
 
+if not os.path.isfile('./scores.json'):
+    with open('./scores.json', 'w') as sf:
+        json.dump([], sf)
+        sf.close()
+
 if not os.path.isfile('./settings.json'):
     with open('./settings.json', 'w') as sf:
         data = { 'music_on': True, 'music_volume': 10, 'sfx_on': True }
         json.dump(data, sf)
         sf.close()
+
+scores_file = open('./scores.json', 'r')
+scores = json.load(scores_file)
+scores_file.close()
 
 settings_file = open('./settings.json', 'r')
 settings = json.load(settings_file)
