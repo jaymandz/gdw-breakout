@@ -13,7 +13,6 @@ class NewGamePage(object):
     BALL_RADIUS = 10
 
     PADDLE_SPEED_FACTOR = 0.5
-    BALL_SPEED_FACTOR = 0.1
 
     def __init__(self, screen_size, settings):
         self.screen_size = screen_size
@@ -53,17 +52,17 @@ class NewGamePage(object):
         if ball_x < self.BALL_RADIUS:
             ball_x = self.BALL_RADIUS
             self._play_panned(self.ball_on_wall_sound, ball_x)
-            self.ball_velocity_x = self.BALL_SPEED_FACTOR
+            self.ball_velocity_x = self.ball_speed_factor
         elif ball_x > self.screen_size[0] - self.BALL_RADIUS:
             ball_x = self.screen_size[0] - self.BALL_RADIUS
             self._play_panned(self.ball_on_wall_sound, ball_x)
-            self.ball_velocity_x = -self.BALL_SPEED_FACTOR
+            self.ball_velocity_x = -self.ball_speed_factor
 
         if ball_y < tu.header_height() + self.BALL_RADIUS:
             self.paddle_size = (self.PADDLE_WIDTH / 2, self.PADDLE_HEIGHT)
             self._play_panned(self.ball_on_wall_sound, ball_x)
             ball_y = tu.header_height() + self.BALL_RADIUS
-            self.ball_velocity_y = self.BALL_SPEED_FACTOR
+            self.ball_velocity_y = self.ball_speed_factor
         elif ball_y > self.screen_size[1] - tu.footer_height() - \
           self.BALL_RADIUS - self.paddle_size[1] and \
           ball_x >= self.paddle_position[0] and \
@@ -71,7 +70,7 @@ class NewGamePage(object):
             self._play_panned(self.ball_on_paddle_sound, ball_x)
             ball_y = self.screen_size[1] - tu.footer_height() - \
               self.BALL_RADIUS - self.paddle_size[1]
-            self.ball_velocity_y = -self.BALL_SPEED_FACTOR
+            self.ball_velocity_y = -self.ball_speed_factor
         elif ball_y > self.screen_size[1] - tu.footer_height():
             if self.settings['sfx_on']: self.tut_tut_sound.play()
             self.num_lives -= 1
@@ -112,7 +111,7 @@ class NewGamePage(object):
             if self.ball_velocity_y < 0: self.ball_velocity_y -= 0.03
             elif self.ball_velocity_y > 0: self.ball_velocity_y += 0.03
 
-            self.BALL_SPEED_FACTOR += 0.03
+            self.ball_speed_factor += 0.03
             self.speed_multiplier += 1
 
     def _check_brick_collision(self, brick, ball_x, ball_y):
@@ -128,7 +127,7 @@ class NewGamePage(object):
             self._play_panned(self.brick_smash_sound, ball_x)
             self.score += brick[2]
             is_hit = True
-            self.ball_velocity_y = -self.BALL_SPEED_FACTOR
+            self.ball_velocity_y = -self.ball_speed_factor
         # Hit from the bottom
         elif self.ball_velocity_y < 0 and ball_x >= brick[1][0] and \
           ball_x <= brick[1][0] + self.BRICK_SIZE[0] and floor(ball_y) == \
@@ -136,7 +135,7 @@ class NewGamePage(object):
             self._play_panned(self.brick_smash_sound, ball_x)
             self.score += brick[2]
             is_hit = True
-            self.ball_velocity_y = self.BALL_SPEED_FACTOR
+            self.ball_velocity_y = self.ball_speed_factor
 
         # Hit from the left
         elif self.ball_velocity_x > 0 and ball_y >= brick[1][1] and \
@@ -145,7 +144,7 @@ class NewGamePage(object):
             self._play_panned(self.brick_smash_sound, ball_x)
             self.score += brick[2]
             is_hit = True
-            self.ball_velocity_x = -self.BALL_SPEED_FACTOR
+            self.ball_velocity_x = -self.ball_speed_factor
         # Hit from the right
         elif self.ball_velocity_x < 0 and ball_y >= brick[1][1] and \
           ball_y <= brick[1][1] + self.BRICK_SIZE[1] and floor(ball_x) == \
@@ -153,7 +152,7 @@ class NewGamePage(object):
             self._play_panned(self.brick_smash_sound, ball_x)
             self.score += brick[2]
             is_hit = True
-            self.ball_velocity_x = self.BALL_SPEED_FACTOR
+            self.ball_velocity_x = self.ball_speed_factor
 
         if is_hit:
             brick = (brick[0], brick[1], brick[2], False)
@@ -207,6 +206,18 @@ class NewGamePage(object):
         if index == self.curr_pause_item_index: return colors.dark_red
         else: return colors.black
 
+    def _toggle_pause_mode(self):
+        if self.is_paused:
+            self.ball_velocity_x = self.game_state['ball_velocity_x']
+            self.ball_velocity_y = self.game_state['ball_velocity_y']
+            self.is_paused = False
+        else:
+            self.game_state['ball_velocity_x'] = self.ball_velocity_x
+            self.game_state['ball_velocity_y'] = self.ball_velocity_y
+            self.ball_velocity_x = 0
+            self.ball_velocity_y = 0
+            self.is_paused = True
+
     def load(self):
         self.paddle_size = (self.PADDLE_WIDTH, self.PADDLE_HEIGHT)
         self.paddle_position = (
@@ -221,6 +232,7 @@ class NewGamePage(object):
 
         self.bricks = self._initialize_bricks()
 
+        self.ball_speed_factor = 0.1
         self.paddle_velocity = 0
         self.ball_velocity_x = 0
         self.ball_velocity_y = 0
@@ -238,6 +250,11 @@ class NewGamePage(object):
         self.num_pause_items = 2
         self.curr_pause_item_index = 0
 
+        self.game_state = {
+            'ball_velocity_x': None,
+            'ball_velocity_y': None,
+        }
+
     def handle_event(self, event):
         if event.type == locals.KEYUP:
             self.paddle_velocity = 0
@@ -245,12 +262,12 @@ class NewGamePage(object):
 
         pressed_keys = pygame.key.get_pressed()
         if pressed_keys[locals.K_ESCAPE]:
-            self.is_paused = not self.is_paused
+            self._toggle_pause_mode()
         elif pressed_keys[locals.K_SPACE] and not self.is_ball_in_play:
             self._play_panned(self.ball_launch_sound, self.ball_position[0])
             self.is_ball_in_play = True
-            self.ball_velocity_x = self.BALL_SPEED_FACTOR
-            self.ball_velocity_y = -self.BALL_SPEED_FACTOR
+            self.ball_velocity_x = self.ball_speed_factor
+            self.ball_velocity_y = -self.ball_speed_factor
         elif pressed_keys[locals.K_LEFT]:
             self.paddle_velocity = -self.PADDLE_SPEED_FACTOR
             if not self.is_ball_in_play:
@@ -269,7 +286,7 @@ class NewGamePage(object):
             self.curr_pause_item_index = (cpii - 1) % npi
         elif pressed_keys[locals.K_RETURN] and self.is_paused:
             cpii = self.curr_pause_item_index
-            if cpii == 0: self.is_paused = False
+            if cpii == 0: self._toggle_pause_mode()
             elif cpii == 1: return 'main_menu', self.settings
 
         return 'new_game', self.settings
