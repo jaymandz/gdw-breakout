@@ -23,6 +23,7 @@ class NewGamePage(object):
 
         self.game_surface = pygame.surface.Surface(screen_size)
         self.pause_surface = pygame.surface.Surface(screen_size)
+        self.game_over_surface = pygame.surface.Surface(screen_size)
 
         self.brick_smash_sound = pygame.mixer.Sound(
             'audio/brick-smash.ogg'
@@ -250,6 +251,8 @@ class NewGamePage(object):
         self.num_pause_items = 2
         self.curr_pause_item_index = 0
 
+        self.is_game_over = False
+
         self.game_state = {
             'ball_velocity_x': None,
             'ball_velocity_y': None,
@@ -382,5 +385,9 @@ class NewGamePage(object):
             (20, 480 - 20 - tu.line_size()),
         )
 
-        if self.is_paused: self.surface.blit(self.pause_surface, (0, 0))
-        else: self.surface.blit(self.game_surface, (0, 0))
+        if self.is_paused:
+            self.surface.blit(self.pause_surface, (0, 0))
+        elif self.is_game_over:
+            self.surface.blit(self.game_over_surface, (0, 0))
+        else:
+            self.surface.blit(self.game_surface, (0, 0))
