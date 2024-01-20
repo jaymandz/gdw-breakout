@@ -1,3 +1,4 @@
+import json
 from math import floor
 
 import pygame
@@ -11,6 +12,7 @@ class NewGamePage(object):
     PADDLE_HEIGHT = 10
     BRICK_SIZE = (40, 16)
     BALL_RADIUS = 10
+    BALL_SPEED_INCREMENT = 0.05
 
     PADDLE_SPEED_FACTOR = 0.5
 
@@ -83,6 +85,8 @@ class NewGamePage(object):
             self.ball_velocity_x = self.paddle_velocity
             self.ball_velocity_y = 0
 
+        if self.num_lives == 0: self._activate_game_over_mode()
+
         # Check for collision with bricks
         for b, brick in enumerate(self.bricks):
             self.bricks[b], ball_x, ball_y = self._check_brick_collision(
@@ -106,13 +110,14 @@ class NewGamePage(object):
         elif self.num_hits == 12: is_speed_to_be_increased = True
 
         if is_speed_to_be_increased:
-            if self.ball_velocity_x < 0: self.ball_velocity_x -= 0.03
-            elif self.ball_velocity_x > 0: self.ball_velocity_x += 0.03
+            increment = self.BALL_SPEED_INCREMENT
+            if self.ball_velocity_x < 0: self.ball_velocity_x -= increment
+            elif self.ball_velocity_x > 0: self.ball_velocity_x += increment
 
-            if self.ball_velocity_y < 0: self.ball_velocity_y -= 0.03
-            elif self.ball_velocity_y > 0: self.ball_velocity_y += 0.03
+            if self.ball_velocity_y < 0: self.ball_velocity_y -= increment
+            elif self.ball_velocity_y > 0: self.ball_velocity_y += increment
 
-            self.ball_speed_factor += 0.03
+            self.ball_speed_factor += increment
             self.speed_multiplier += 1
 
     def _check_brick_collision(self, brick, ball_x, ball_y):
@@ -218,6 +223,21 @@ class NewGamePage(object):
             self.ball_velocity_x = 0
             self.ball_velocity_y = 0
             self.is_paused = True
+    
+    def _save_score(self):
+        scores = None
+
+        with open('./scores.json', 'r') as sf:
+            scores = json.load(sf)
+            sf.close()
+
+        with open('./scores.json', 'w') as sf:
+            scores.append({ 'name': 'Sample', 'score': self.score })
+            json.dump(scores, sf)
+            sf.close()
+    
+    def _activate_game_over_mode(self):
+        self.is_game_over = True
 
     def load(self):
         self.paddle_size = (self.PADDLE_WIDTH, self.PADDLE_HEIGHT)
@@ -252,6 +272,8 @@ class NewGamePage(object):
         self.curr_pause_item_index = 0
 
         self.is_game_over = False
+        self.player_name = ''
+        self.curr_name_index = -1
 
         self.game_state = {
             'ball_velocity_x': None,
@@ -264,8 +286,10 @@ class NewGamePage(object):
             if not self.is_ball_in_play: self.ball_velocity_x = 0
 
         pressed_keys = pygame.key.get_pressed()
-        if pressed_keys[locals.K_ESCAPE]:
+        if pressed_keys[locals.K_ESCAPE] and not self.is_game_over:
             self._toggle_pause_mode()
+        elif pressed_keys[locals.K_ESCAPE] and self.is_game_over:
+            return 'main_menu', self.settings
         elif pressed_keys[locals.K_SPACE] and not self.is_ball_in_play:
             self._play_panned(self.ball_launch_sound, self.ball_position[0])
             self.is_ball_in_play = True
@@ -291,6 +315,9 @@ class NewGamePage(object):
             cpii = self.curr_pause_item_index
             if cpii == 0: self._toggle_pause_mode()
             elif cpii == 1: return 'main_menu', self.settings
+        elif pressed_keys[locals.K_RETURN] and self.is_game_over:
+            self._save_score()
+            return 'main_menu', self.settings
 
         return 'new_game', self.settings
 
@@ -382,6 +409,21 @@ class NewGamePage(object):
           '<Esc>: Resume'
         self.pause_surface.blit(
             tu.regular_text(colors.gray, ps_footer_text),
+            (20, 480 - 20 - tu.line_size()),
+        )
+
+        self.game_over_surface.fill(colors.beige)
+
+        self.game_over_surface.blit(
+            tu.regular_text(colors.black, 'Enter your name.'),
+            (20, (self.screen_size[1] / 2) - tu.footer_height() - \
+              tu.line_size(1.5)),
+        )
+
+        gos_footer_text = '\u2190\u2192: Move cursor, <Enter>: Save, '+ \
+          '<Esc>: Skip'
+        self.game_over_surface.blit(
+            tu.regular_text(colors.gray, gos_footer_text),
             (20, 480 - 20 - tu.line_size()),
         )
 
