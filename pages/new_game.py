@@ -232,12 +232,18 @@ class NewGamePage(object):
             sf.close()
 
         with open('./scores.json', 'w') as sf:
-            scores.append({ 'name': 'Sample', 'score': self.score })
+            scores.append({ 'name': self.player_name, 'score': self.score })
             json.dump(scores, sf)
             sf.close()
     
     def _activate_game_over_mode(self):
         self.is_game_over = True
+    
+    def _append_to_player_name(self, event):
+        if event.key >= locals.K_SPACE and event.key <= locals.K_z:
+            self.player_name += event.unicode
+        elif event.key == locals.K_BACKSPACE:
+            self.player_name = self.player_name[:len(self.player_name)-1]
 
     def load(self):
         self.paddle_size = (self.PADDLE_WIDTH, self.PADDLE_HEIGHT)
@@ -281,16 +287,19 @@ class NewGamePage(object):
         }
 
     def handle_event(self, event):
-        if event.type == locals.KEYUP:
+        if event.type == locals.KEYUP and not self.is_game_over:
             self.paddle_velocity = 0
             if not self.is_ball_in_play: self.ball_velocity_x = 0
+        elif event.type == locals.KEYUP and self.is_game_over:
+            self._append_to_player_name(event)
 
         pressed_keys = pygame.key.get_pressed()
         if pressed_keys[locals.K_ESCAPE] and not self.is_game_over:
             self._toggle_pause_mode()
         elif pressed_keys[locals.K_ESCAPE] and self.is_game_over:
             return 'main_menu', self.settings
-        elif pressed_keys[locals.K_SPACE] and not self.is_ball_in_play:
+        elif pressed_keys[locals.K_SPACE] and not self.is_game_over and \
+          not self.is_ball_in_play:
             self._play_panned(self.ball_launch_sound, self.ball_position[0])
             self.is_ball_in_play = True
             self.ball_velocity_x = self.ball_speed_factor
@@ -418,6 +427,10 @@ class NewGamePage(object):
             tu.regular_text(colors.black, 'Enter your name.'),
             (20, (self.screen_size[1] / 2) - tu.footer_height() - \
               tu.line_size(1.5)),
+        )
+        self.game_over_surface.blit(
+            tu.regular_text(colors.blue, self.player_name+'\u00bb'),
+            (20, (self.screen_size[1] / 2) - tu.footer_height()),
         )
 
         gos_footer_text = '\u2190\u2192: Move cursor, <Enter>: Save, '+ \
