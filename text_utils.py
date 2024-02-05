@@ -1,19 +1,21 @@
 import pygame
 
+from asset_utils import path
+
 pygame.init()
 
 fonts = {
     'regular': pygame.font.Font(
-        'fonts/MonaspaceNeon-Regular.otf', 16
+        path('fonts/MonaspaceNeon-Regular.otf'), 16
     ),
     'bold': pygame.font.Font(
-        'fonts/MonaspaceNeon-Bold.otf', 16
+        path('fonts/MonaspaceNeon-Bold.otf'), 16
     ),
     'italic': pygame.font.Font(
-        'fonts/MonaspaceNeon-Italic.otf', 16
+        path('fonts/MonaspaceNeon-Italic.otf'), 16
     ),
     'bold-italic': pygame.font.Font(
-        'fonts/MonaspaceNeon-BoldItalic.otf', 16
+        path('fonts/MonaspaceNeon-BoldItalic.otf'), 16
     ),
 }
 

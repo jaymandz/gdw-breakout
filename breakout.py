@@ -5,6 +5,7 @@ sys.path.append('.')
 import pygame
 from pygame import locals
 
+from asset_utils import path
 from pages import credits as credits_module
 from pages import new_game as new_game_module
 from pages import main_menu as main_menu_module
@@ -50,7 +51,7 @@ pygame.display.set_caption('Breakout, by jaymandz')
 
 pygame.mixer.music.set_endevent(locals.USEREVENT + 1)
 
-pygame.mixer.music.load('audio/Andrey Avkhimovich - Like A Cake.mp3')
+pygame.mixer.music.load(path('audio/Andrey Avkhimovich - Like A Cake.mp3'))
 pygame.mixer.music.set_volume(settings['music_volume'] * 0.1)
 
 if settings['music_on']: pygame.mixer.music.play()

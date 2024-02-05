@@ -6,6 +6,7 @@ from pygame import locals
 
 import colors
 import text_utils as tu
+from asset_utils import path
 
 class NewGamePage(object):
     PADDLE_WIDTH = 120
@@ -28,19 +29,19 @@ class NewGamePage(object):
         self.game_over_surface = pygame.surface.Surface(screen_size)
 
         self.brick_smash_sound = pygame.mixer.Sound(
-            'audio/brick-smash.ogg'
+            path('audio/brick-smash.ogg')
         )
         self.ball_on_paddle_sound = pygame.mixer.Sound(
-            'audio/ball-on-paddle.ogg'
+            path('audio/ball-on-paddle.ogg')
         )
         self.ball_launch_sound = pygame.mixer.Sound(
-            'audio/ball-launch.ogg'
+            path('audio/ball-launch.ogg')
         )
         self.ball_on_wall_sound = pygame.mixer.Sound(
-            'audio/ball-on-wall.ogg'
+            path('audio/ball-on-wall.ogg')
         )
         self.tut_tut_sound = pygame.mixer.Sound(
-            'audio/tut-tut.ogg'
+            path('audio/tut-tut.ogg')
         )
 
     def _play_panned(self, sound, x):
