@@ -9,7 +9,7 @@ import text_utils as tu
 from asset_utils import path
 
 class NewGamePage(object):
-    PADDLE_WIDTH = 120
+    PADDLE_WIDTH = 180
     PADDLE_HEIGHT = 10
     BRICK_SIZE = (40, 16)
     BALL_RADIUS = 10
