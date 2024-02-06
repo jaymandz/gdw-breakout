@@ -18,6 +18,16 @@ $ poetry run python breakout.py
 
 Enjoy!
 
+## Creating an executable file
+
+If you wish to create an executable file for this game, run the following command:
+
+```shell
+$ poetry run pyinstaller breakout.spec
+```
+
+You will find the new executable file in the `dist` folder.
+
 ## Audio credits
 
 - Background song is &ldquo;Like A Cake&rdquo; by Andrey Avkhimovich. [Listen on Jamendo](https://www.jamendo.com/track/1199570/like-a-cake)
