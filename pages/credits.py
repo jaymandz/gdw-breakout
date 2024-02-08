@@ -61,16 +61,24 @@ class CreditsPage(object):
         )
         self.surface.blit(
             tu.italic_text(colors.black, 'Bell sound on ball speed increase'),
-            (50, 40 + tu.line_size() * 12),
+            (50, 40 + tu.line_size() * 11),
         )
         self.surface.blit(
             tu.regular_text(colors.black, 'https://freesound.org/people/cdrk/sounds/495484/'),
+            (50, 40 + tu.line_size() * 12),
+        )
+        self.surface.blit(
+            tu.italic_text(colors.black, 'Sound when paddle shrinks'),
             (50, 40 + tu.line_size() * 13),
+        )
+        self.surface.blit(
+            tu.regular_text(colors.black, 'https://freesound.org/people/OTBTechno/sounds/136772/'),
+            (50, 40 + tu.line_size() * 14),
         )
 
         self.surface.blit(
             tu.bold_text(colors.black, 'Fonts'),
-            (40, 40 + tu.line_size() * 15),
+            (40, 40 + tu.line_size() * 16),
         )
 
         # Footer

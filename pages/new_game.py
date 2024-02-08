@@ -47,6 +47,9 @@ class NewGamePage(object):
         self.tut_tut_sound = pygame.mixer.Sound(
             path('audio/tut-tut.ogg')
         )
+        self.paddle_shrink_sound = pygame.mixer.Sound(
+            path('audio/paddle-shrink.ogg')
+        )
 
     def _play_panned(self, sound, x):
         if not self.settings['sfx_on']: return
@@ -67,7 +70,7 @@ class NewGamePage(object):
             self.ball_velocity_x = -self.ball_speed_factor
 
         if ball_y < tu.header_height() + self.BALL_RADIUS:
-            self.paddle_size = (self.PADDLE_WIDTH / 2, self.PADDLE_HEIGHT)
+            self._check_if_first_contact_with_ceiling()
             self._play_panned(self.ball_on_wall_sound, ball_x)
             ball_y = tu.header_height() + self.BALL_RADIUS
             self.ball_velocity_y = self.ball_speed_factor
@@ -99,6 +102,7 @@ class NewGamePage(object):
             self.num_hits = 0
             self.is_contact_with_orange_blocks_made = False
             self.is_contact_with_red_blocks_made = False
+            self.is_contact_with_ceiling_made = False
 
             self.paddle_size = (self.paddle_size[0] * 2, self.paddle_size[1])
             ball_x, ball_y = self._rest_ball()
@@ -270,6 +274,12 @@ class NewGamePage(object):
         self.ball_velocity_x = self.paddle_velocity
         self.ball_velocity_y = 0
         return ball_x, ball_y
+    
+    def _check_if_first_contact_with_ceiling(self):
+        if not self.is_contact_with_ceiling_made:
+            self.paddle_size = (self.PADDLE_WIDTH / 2, self.PADDLE_HEIGHT)
+            self.is_contact_with_ceiling_made = True
+            self.paddle_shrink_sound.play()
 
     def load(self):
         self.paddle_size = (self.PADDLE_WIDTH, self.PADDLE_HEIGHT)
@@ -298,6 +308,7 @@ class NewGamePage(object):
 
         self.is_contact_with_orange_blocks_made = False
         self.is_contact_with_red_blocks_made = False
+        self.is_contact_with_ceiling_made = False
 
         self.is_paused = False
         self.num_pause_items = 2
