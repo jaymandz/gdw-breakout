@@ -75,10 +75,18 @@ class CreditsPage(object):
             tu.regular_text(colors.black, 'https://freesound.org/people/OTBTechno/sounds/136772/'),
             (50, 40 + tu.line_size() * 14),
         )
+        self.surface.blit(
+            tu.italic_text(colors.black, 'Rewind sound on game reset'),
+            (50, 40 + tu.line_size() * 15),
+        )
+        self.surface.blit(
+            tu.regular_text(colors.black, 'https://freesound.org/people/crunchymaniac/sounds/687272/'),
+            (50, 40 + tu.line_size() * 16),
+        )
 
         self.surface.blit(
             tu.bold_text(colors.black, 'Fonts'),
-            (40, 40 + tu.line_size() * 16),
+            (40, 40 + tu.line_size() * 18),
         )
 
         # Footer

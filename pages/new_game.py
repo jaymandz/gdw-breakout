@@ -50,6 +50,9 @@ class NewGamePage(object):
         self.paddle_shrink_sound = pygame.mixer.Sound(
             path('audio/paddle-shrink.ogg')
         )
+        self.game_reset_sound = pygame.mixer.Sound(
+            path('audio/game-reset.ogg')
+        )
 
     def _play_panned(self, sound, x):
         if not self.settings['sfx_on']: return
@@ -110,6 +113,8 @@ class NewGamePage(object):
             
             self.ball_speed_factor = self.INITIAL_BALL_SPEED_FACTOR
             self.speed_multiplier = 1
+
+            self.game_reset_sound.play()
 
         return ball_x, ball_y
 
