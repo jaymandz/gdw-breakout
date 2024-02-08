@@ -78,20 +78,22 @@ class NewGamePage(object):
         elif ball_y > self.screen_size[1] - tu.footer_height():
             if self.settings['sfx_on']: self.tut_tut_sound.play()
             self.num_lives -= 1
-
-            self.is_ball_in_play = False
-            ball_x = self.paddle_position[0] + self.paddle_size[0] / 2
-            ball_y = self.screen_size[1] - tu.footer_height() - \
-              self.paddle_size[1] - self.BALL_RADIUS
-            self.ball_velocity_x = self.paddle_velocity
-            self.ball_velocity_y = 0
+            ball_x, ball_y = self._rest_ball()
 
         if self.num_lives == 0: self._activate_game_over_mode()
 
         # Check for collision with bricks
+        is_every_brick_hit = True
         for b, brick in enumerate(self.bricks):
             self.bricks[b], ball_x, ball_y = self._check_brick_collision(
               brick, ball_x, ball_y)
+            if brick[3]: is_every_brick_hit = False
+
+        # Check if all bricks were hit. If true, put ball at rest and
+        # reset all bricks.
+        if is_every_brick_hit:
+            self.bricks = self._initialize_bricks()
+            #
 
         return ball_x, ball_y
 
@@ -245,6 +247,15 @@ class NewGamePage(object):
             self.player_name += event.unicode
         elif event.key == locals.K_BACKSPACE:
             self.player_name = self.player_name[:len(self.player_name)-1]
+
+    def _rest_ball(self):
+        self.is_ball_in_play = False
+        ball_x = self.paddle_position[0] + self.paddle_size[0] / 2
+        ball_y = self.screen_size[1] - tu.footer_height() - \
+          self.paddle_size[1] - self.BALL_RADIUS
+        self.ball_velocity_x = self.paddle_velocity
+        self.ball_velocity_y = 0
+        return ball_x, ball_y
 
     def load(self):
         self.paddle_size = (self.PADDLE_WIDTH, self.PADDLE_HEIGHT)
