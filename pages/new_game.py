@@ -14,6 +14,7 @@ class NewGamePage(object):
     BRICK_SIZE = (40, 16)
     BALL_RADIUS = 10
     BALL_SPEED_INCREMENT = 0.05
+    INITIAL_BALL_SPEED_FACTOR = 0.1
 
     PADDLE_SPEED_FACTOR = 0.5
 
@@ -92,8 +93,16 @@ class NewGamePage(object):
         # Check if all bricks were hit. If true, put ball at rest and
         # reset all bricks.
         if is_every_brick_hit:
+            self.num_hits = 0
+            self.is_contact_with_orange_blocks_made = False
+            self.is_contact_with_red_blocks_made = False
+
+            self.paddle_size = (self.paddle_size[0] * 2, self.paddle_size[1])
+            ball_x, ball_y = self._rest_ball()
             self.bricks = self._initialize_bricks()
-            #
+            
+            self.ball_speed_factor = self.INITIAL_BALL_SPEED_FACTOR
+            self.speed_multiplier = 1
 
         return ball_x, ball_y
 
@@ -271,7 +280,7 @@ class NewGamePage(object):
 
         self.bricks = self._initialize_bricks()
 
-        self.ball_speed_factor = 0.1
+        self.ball_speed_factor = self.INITIAL_BALL_SPEED_FACTOR
         self.paddle_velocity = 0
         self.ball_velocity_x = 0
         self.ball_velocity_y = 0
