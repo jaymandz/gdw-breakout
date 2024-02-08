@@ -41,6 +41,9 @@ class NewGamePage(object):
         self.ball_on_wall_sound = pygame.mixer.Sound(
             path('audio/ball-on-wall.ogg')
         )
+        self.ball_speed_up_bell_sound = pygame.mixer.Sound(
+            path('audio/ball-speed-up-bell.ogg')
+        )
         self.tut_tut_sound = pygame.mixer.Sound(
             path('audio/tut-tut.ogg')
         )
@@ -131,6 +134,8 @@ class NewGamePage(object):
 
             self.ball_speed_factor += increment
             self.speed_multiplier += 1
+
+            self.ball_speed_up_bell_sound.play()
 
     def _check_brick_collision(self, brick, ball_x, ball_y):
         if not self.is_ball_in_play: return brick, ball_x, ball_y

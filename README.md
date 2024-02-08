@@ -32,3 +32,4 @@ You will find the new executable file in the `dist` folder.
 
 - Background song is &ldquo;Like A Cake&rdquo; by Andrey Avkhimovich. [Listen on Jamendo](https://www.jamendo.com/track/1199570/like-a-cake)
 - Ball bounce on paddle was extracted from [this sound](https://freesound.org/people/DanielRousseau/sounds/366780/) from Freesound user `DanielRousseau`.
+- Bell sound when ball speed increases was extracted from [this sound](https://freesound.org/people/cdrk/sounds/495484/) from Freesound user `cdrk`.
