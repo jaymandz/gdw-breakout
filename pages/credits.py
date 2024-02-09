@@ -99,16 +99,24 @@ class CreditsPage(object):
         )
 
         self.page2_surface.blit(
-            tu.bold_text(colors.black, 'Fonts'),
-            (40, 40),
+            tu.italic_text(colors.black, 'Menu key press sound'),
+            (50, 40),
         )
         self.page2_surface.blit(
-            tu.italic_text(colors.black, 'Monaspace Neon'),
+            tu.regular_text(colors.black, 'https://freesound.org/people/Freezeman/sounds/153210/'),
             (50, 40 + tu.line_size()),
         )
         self.page2_surface.blit(
+            tu.bold_text(colors.black, 'Fonts'),
+            (40, 40 + tu.line_size() * 3),
+        )
+        self.page2_surface.blit(
+            tu.italic_text(colors.black, 'Monaspace Neon'),
+            (50, 40 + tu.line_size() * 4),
+        )
+        self.page2_surface.blit(
             tu.regular_text(colors.black, 'https://monaspace.githubnext.com/'),
-            (50, 40 + tu.line_size() * 2),
+            (50, 40 + tu.line_size() * 5),
         )
 
         # Footer

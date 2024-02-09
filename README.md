@@ -35,3 +35,4 @@ You will find the new executable file in the `dist` folder.
 - Bell sound when ball speed increases was extracted from [this sound](https://freesound.org/people/cdrk/sounds/495484/) from Freesound user `cdrk`.
 - Sound when paddle shrinks was extracted from [this sound](https://freesound.org/people/OTBTechno/sounds/136772/) from Freesound user `OTBTechno`.
 - Rewind sound when game resets was derived from [this sound](https://freesound.org/people/crunchymaniac/sounds/687272/) from Freesound user `crunchymaniac`.
+- Sound when keys are pressed in menus was extracted from [this sound](https://freesound.org/people/Freezeman/sounds/153210/) from Freesound user `Freezeman`.
