@@ -54,6 +54,10 @@ class NewGamePage(object):
             path('audio/game-reset.ogg')
         )
 
+        self.menu_key_press_sound = pygame.mixer.Sound(
+            path('audio/menu-key-press.ogg')
+        )
+
     def _play_panned(self, sound, x):
         if not self.settings['sfx_on']: return
         channel = sound.play()
@@ -338,6 +342,7 @@ class NewGamePage(object):
         pressed_keys = pygame.key.get_pressed()
         if pressed_keys[locals.K_ESCAPE] and not self.is_game_over:
             self._toggle_pause_mode()
+            self.menu_key_press_sound.play()
         elif pressed_keys[locals.K_ESCAPE] and self.is_game_over:
             return 'main_menu', self.settings
         elif pressed_keys[locals.K_SPACE] and not self.is_game_over and \
@@ -358,11 +363,14 @@ class NewGamePage(object):
             npi = self.num_pause_items
             cpii = self.curr_pause_item_index
             self.curr_pause_item_index = (cpii + 1) % npi
+            self.menu_key_press_sound.play()
         elif pressed_keys[locals.K_UP] and self.is_paused:
             npi = self.num_pause_items
             cpii = self.curr_pause_item_index
             self.curr_pause_item_index = (cpii - 1) % npi
+            self.menu_key_press_sound.play()
         elif pressed_keys[locals.K_RETURN] and self.is_paused:
+            self.menu_key_press_sound.play()
             cpii = self.curr_pause_item_index
             if cpii == 0: self._toggle_pause_mode()
             elif cpii == 1: return 'main_menu', self.settings

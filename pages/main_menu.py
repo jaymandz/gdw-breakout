@@ -3,8 +3,8 @@ import sys
 import pygame
 from pygame import locals
 
-import colors
-import text_utils as tu
+import colors, text_utils as tu
+from asset_utils import path
 
 class MainMenuPage(object):
     def __init__(self, screen_size, settings):
@@ -12,6 +12,10 @@ class MainMenuPage(object):
         self.surface = pygame.surface.Surface(screen_size)
         self.num_items = 5
         self.curr_item_index = 0
+
+        self.menu_key_press_sound = pygame.mixer.Sound(
+            path('audio/menu-key-press.ogg')
+        )
 
     def _item_color(self, index):
         if index == self.curr_item_index: return colors.dark_red
@@ -28,9 +32,12 @@ class MainMenuPage(object):
         pressed_keys = pygame.key.get_pressed()
         if pressed_keys[locals.K_DOWN]:
             self.curr_item_index = (self.curr_item_index + 1) % ni
+            self.menu_key_press_sound.play()
         elif pressed_keys[locals.K_UP]:
             self.curr_item_index = (self.curr_item_index - 1) % ni
+            self.menu_key_press_sound.play()
         elif pressed_keys[locals.K_RETURN]:
+            self.menu_key_press_sound.play()
             if self.curr_item_index == 0: return 'new_game', settings
             elif self.curr_item_index == 1: return 'scores', settings
             elif self.curr_item_index == 2: return 'settings', settings

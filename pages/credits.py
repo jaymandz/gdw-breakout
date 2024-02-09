@@ -1,8 +1,8 @@
 import pygame
 from pygame import locals
 
-import colors
-import text_utils as tu
+import colors, text_utils as tu
+from asset_utils import path
 
 class CreditsPage(object):
     def __init__(self, screen_size, settings):
@@ -12,12 +12,18 @@ class CreditsPage(object):
         self.page1_surface = pygame.surface.Surface(screen_size)
         self.page2_surface = pygame.surface.Surface(screen_size)
 
+        self.menu_key_press_sound = pygame.mixer.Sound(
+            path('audio/menu-key-press.ogg')
+        )
+
     def load(self):
         self.current_page = 1
 
     def handle_event(self, event):
         pressed_keys = pygame.key.get_pressed()
-        if pressed_keys[locals.K_ESCAPE]: return 'main_menu', self.settings
+        if pressed_keys[locals.K_ESCAPE]:
+            self.menu_key_press_sound.play()
+            return 'main_menu', self.settings
         elif pressed_keys[locals.K_LEFT] and self.current_page == 2:
             self.current_page = 1
         elif pressed_keys[locals.K_RIGHT] and self.current_page == 1:

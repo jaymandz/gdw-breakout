@@ -5,6 +5,7 @@ import pygame
 from pygame import locals
 
 import colors, text_utils as tu
+from asset_utils import path
 
 class ScoresPage(object):
     ITEMS_PER_PAGE = 12
@@ -12,6 +13,10 @@ class ScoresPage(object):
     def __init__(self, screen_size, settings):
         self.settings = settings
         self.surface = pygame.surface.Surface(screen_size)
+
+        self.menu_key_press_sound = pygame.mixer.Sound(
+            path('audio/menu-key-press.ogg')
+        )
     
     def _render_score(self, i, score):
         n = score['name']
@@ -33,6 +38,7 @@ class ScoresPage(object):
     def handle_event(self, event):
         pressed_keys = pygame.key.get_pressed()
         if pressed_keys[locals.K_ESCAPE]:
+            self.menu_key_press_sound.play()
             return 'main_menu', self.settings
         elif pressed_keys[locals.K_LEFT]:
             if self.curr_page_index > 0: self.curr_page_index -= 1

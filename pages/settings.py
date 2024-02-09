@@ -2,12 +2,17 @@ import pygame
 from pygame import locals
 
 import colors, text_utils as tu
+from asset_utils import path
 
 class SettingsPage(object):
     def __init__(self, screen_size, settings):
         self.settings = settings
         self.surface = pygame.surface.Surface(screen_size)
         self.num_items = 3
+
+        self.menu_key_press_sound = pygame.mixer.Sound(
+            path('audio/menu-key-press.ogg')
+        )
 
     def _item_color(self, index):
         if index == self.curr_item_index: return colors.dark_red
@@ -49,13 +54,16 @@ class SettingsPage(object):
         pressed_keys = pygame.key.get_pressed()
         if pressed_keys[locals.K_DOWN]:
             self.curr_item_index = (self.curr_item_index + 1) % ni
+            self.menu_key_press_sound.play()
         elif pressed_keys[locals.K_UP]:
             self.curr_item_index = (self.curr_item_index - 1) % ni
+            self.menu_key_press_sound.play()
         elif pressed_keys[locals.K_LEFT]:
             self._decrease_setting_value()
         elif pressed_keys[locals.K_RIGHT]:
             self._increase_setting_value()
         elif pressed_keys[locals.K_ESCAPE]:
+            self.menu_key_press_sound.play()
             return 'main_menu', self.settings
 
         return 'settings', self.settings
