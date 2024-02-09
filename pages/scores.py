@@ -27,6 +27,7 @@ class ScoresPage(object):
             self.scores = json.load(sf)
             sf.close()
 
+        self.scores.sort(reverse=True, key=lambda s: s['score'])
         self.curr_page_index = 0
 
     def handle_event(self, event):
