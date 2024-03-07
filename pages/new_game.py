@@ -118,7 +118,7 @@ class NewGamePage(object):
             self.ball_speed_factor = self.INITIAL_BALL_SPEED_FACTOR
             self.speed_multiplier = 1
 
-            self.game_reset_sound.play()
+            if self.settings['sfx_on']: self.game_reset_sound.play()
 
         return ball_x, ball_y
 
@@ -148,7 +148,7 @@ class NewGamePage(object):
             self.ball_speed_factor += increment
             self.speed_multiplier += 1
 
-            self.ball_speed_up_bell_sound.play()
+            if self.settings['sfx_on']: self.ball_speed_up_bell_sound.play()
 
     def _check_brick_collision(self, brick, ball_x, ball_y):
         if not self.is_ball_in_play: return brick, ball_x, ball_y
@@ -288,7 +288,7 @@ class NewGamePage(object):
         if not self.is_contact_with_ceiling_made:
             self.paddle_size = (self.PADDLE_WIDTH / 2, self.PADDLE_HEIGHT)
             self.is_contact_with_ceiling_made = True
-            self.paddle_shrink_sound.play()
+            if self.settings['sfx_on']: self.paddle_shrink_sound.play()
 
     def load(self):
         self.paddle_size = (self.PADDLE_WIDTH, self.PADDLE_HEIGHT)
@@ -342,7 +342,7 @@ class NewGamePage(object):
         pressed_keys = pygame.key.get_pressed()
         if pressed_keys[locals.K_ESCAPE] and not self.is_game_over:
             self._toggle_pause_mode()
-            self.menu_key_press_sound.play()
+            if self.settings['sfx_on']: self.menu_key_press_sound.play()
         elif pressed_keys[locals.K_ESCAPE] and self.is_game_over:
             return 'main_menu', self.settings
         elif pressed_keys[locals.K_SPACE] and not self.is_game_over and \
@@ -363,14 +363,14 @@ class NewGamePage(object):
             npi = self.num_pause_items
             cpii = self.curr_pause_item_index
             self.curr_pause_item_index = (cpii + 1) % npi
-            self.menu_key_press_sound.play()
+            if self.settings['sfx_on']: self.menu_key_press_sound.play()
         elif pressed_keys[locals.K_UP] and self.is_paused:
             npi = self.num_pause_items
             cpii = self.curr_pause_item_index
             self.curr_pause_item_index = (cpii - 1) % npi
-            self.menu_key_press_sound.play()
+            if self.settings['sfx_on']: self.menu_key_press_sound.play()
         elif pressed_keys[locals.K_RETURN] and self.is_paused:
-            self.menu_key_press_sound.play()
+            if self.settings['sfx_on']: self.menu_key_press_sound.play()
             cpii = self.curr_pause_item_index
             if cpii == 0: self._toggle_pause_mode()
             elif cpii == 1: return 'main_menu', self.settings

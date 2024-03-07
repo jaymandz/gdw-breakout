@@ -54,16 +54,16 @@ class SettingsPage(object):
         pressed_keys = pygame.key.get_pressed()
         if pressed_keys[locals.K_DOWN]:
             self.curr_item_index = (self.curr_item_index + 1) % ni
-            self.menu_key_press_sound.play()
+            if self.settings['sfx_on']: self.menu_key_press_sound.play()
         elif pressed_keys[locals.K_UP]:
             self.curr_item_index = (self.curr_item_index - 1) % ni
-            self.menu_key_press_sound.play()
+            if self.settings['sfx_on']: self.menu_key_press_sound.play()
         elif pressed_keys[locals.K_LEFT]:
             self._decrease_setting_value()
         elif pressed_keys[locals.K_RIGHT]:
             self._increase_setting_value()
         elif pressed_keys[locals.K_ESCAPE]:
-            self.menu_key_press_sound.play()
+            if self.settings['sfx_on']: self.menu_key_press_sound.play()
             return 'main_menu', self.settings
 
         return 'settings', self.settings

@@ -32,12 +32,12 @@ class MainMenuPage(object):
         pressed_keys = pygame.key.get_pressed()
         if pressed_keys[locals.K_DOWN]:
             self.curr_item_index = (self.curr_item_index + 1) % ni
-            self.menu_key_press_sound.play()
+            if self.settings['sfx_on']: self.menu_key_press_sound.play()
         elif pressed_keys[locals.K_UP]:
             self.curr_item_index = (self.curr_item_index - 1) % ni
-            self.menu_key_press_sound.play()
+            if self.settings['sfx_on']: self.menu_key_press_sound.play()
         elif pressed_keys[locals.K_RETURN]:
-            self.menu_key_press_sound.play()
+            if self.settings['sfx_on']: self.menu_key_press_sound.play()
             if self.curr_item_index == 0: return 'new_game', settings
             elif self.curr_item_index == 1: return 'scores', settings
             elif self.curr_item_index == 2: return 'settings', settings

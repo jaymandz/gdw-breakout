@@ -22,7 +22,7 @@ class CreditsPage(object):
     def handle_event(self, event):
         pressed_keys = pygame.key.get_pressed()
         if pressed_keys[locals.K_ESCAPE]:
-            self.menu_key_press_sound.play()
+            if self.settings['sfx_on']: self.menu_key_press_sound.play()
             return 'main_menu', self.settings
         elif pressed_keys[locals.K_LEFT] and self.current_page == 2:
             self.current_page = 1
