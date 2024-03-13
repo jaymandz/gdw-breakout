@@ -65,7 +65,7 @@ class NewGamePage(object):
             right = x / self.screen_size[0]
             left = 1.0 - right
             channel.set_volume(left, right)
-
+    
     def _ball_in_play_position(self, ball_x, ball_y):
         if ball_x < self.BALL_RADIUS:
             ball_x = self.BALL_RADIUS
@@ -287,6 +287,9 @@ class NewGamePage(object):
     def _check_if_first_contact_with_ceiling(self):
         if not self.is_contact_with_ceiling_made:
             self.paddle_size = (self.PADDLE_WIDTH / 2, self.PADDLE_HEIGHT)
+            self.paddle_position = (
+              self.paddle_position[0] + self.PADDLE_WIDTH / 4,
+              self.paddle_position[1])
             self.is_contact_with_ceiling_made = True
             if self.settings['sfx_on']: self.paddle_shrink_sound.play()
 
